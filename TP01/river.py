@@ -228,14 +228,19 @@ def main():
     operatorsAB = [moveBothAB, move1missAB, move2missAB, move1cannAB, move2cannAB]
     operatorsBA = [moveBothBA, move1missBA, move2missBA, move1cannBA, move2cannBA]
 
-    print('\nUsing Breadth First Search:')
-    solve_bfs(operatorsAB, operatorsBA)
-    print('\nUsing Depth First Search:')
-    solve_dfs(operatorsAB, operatorsBA)
-    print('\nUsing Progressive Depth Search:')
-    solve_progressive_dfs(operatorsAB, operatorsBA)
+    if alg == 'bfs':
+        print('\nUsing Breadth First Search:')
+        solve_bfs(operators)
+    elif alg == 'dfs':
+        print('\nUsing Depth First Search:')
+        solve_dfs(operators)
+    elif alg == 'progressive':
+        print('\nUsing Progressive Depth Search:')
+        solve_progressive_dfs(operators)
+    else:
+        print('\nAlgorithm \'' + sys.argv[1] +'\' is not implemented!')
+    
     print()
-    return 0
 
 
 if __name__ == '__main__':

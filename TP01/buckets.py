@@ -1,3 +1,6 @@
+import sys
+
+
 class State(object):
     def __init__(self, B1=0, B2=0):
         [self.B1, self.B2] = [B1, B2]
@@ -180,13 +183,22 @@ def main():
 
     operators = [empty_B1, empty_B2, fill_B1, fill_B2, transfer_B1_fill_B2, transfer_B1_empty_B1, transfer_B2_fill_B1, transfer_B2_empty_B2]
 
-    print('\nUsing Breadth First Search:')
-    solve_bfs(operators)
-    print('\nUsing Depth First Search:')
-    solve_dfs(operators)
-    print('\nUsing Progressive Depth Search:')
-    solve_progressive_dfs(operators)
+    alg = sys.argv[1].lower()
+    
+    if alg == 'bfs':
+        print('\nUsing Breadth First Search:')
+        solve_bfs(operators)
+    elif alg == 'dfs':
+        print('\nUsing Depth First Search:')
+        solve_dfs(operators)
+    elif alg == 'progressive':
+        print('\nUsing Progressive Depth Search:')
+        solve_progressive_dfs(operators)
+    else:
+        print('\nAlgorithm \'' + sys.argv[1] +'\' is not implemented!')
+    
     print()
+
 
 if __name__ == '__main__':
     main()
