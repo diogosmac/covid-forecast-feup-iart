@@ -14,11 +14,13 @@ class State(object):
     def equal(self, state):
         return self.B1 == state.B1 and self.B2 == state.B2
 
+
 def empty_B1(State):
     if State.B1 > 0:
         State.B1 = 0
         return True
     return False
+
 
 def empty_B2(State):
     if State.B2 > 0:
@@ -26,17 +28,20 @@ def empty_B2(State):
         return True
     return False
 
+
 def fill_B1(State):
     if State.B1 < C1:
         State.B1 = C1
         return True
     return False
 
+
 def fill_B2(State):
     if State.B2 < C2:
         State.B2 = C2
         return True
     return False
+
 
 def transfer_B1_fill_B2(State):
     if State.B1 + State.B2 >= C2 and State.B2 < C2:
@@ -45,6 +50,7 @@ def transfer_B1_fill_B2(State):
         return True
     return False
 
+
 def transfer_B1_empty_B1(State):
     if State.B1 + State.B2 <= C2 and State.B1 > 0:
         State.B2 = State.B1 + State.B2
@@ -52,12 +58,14 @@ def transfer_B1_empty_B1(State):
         return True
     return False
 
+
 def transfer_B2_fill_B1(State):
     if State.B1 + State.B2 >= C1 and State.B1 < C1:
         State.B2 = State.B2 - (C2 - State.B1)
         State.B1 = C1
         return True
     return False
+
 
 def transfer_B2_empty_B2(State):
     if State.B1 + State.B2 <= C1 and State.B2 > 0:
