@@ -1,8 +1,11 @@
-import sys, random, time
+import random
+import sys
+import time
 
 
 def get_row(pos):
     return pos[0]
+
 
 def get_col(pos):
     return pos[1]
@@ -12,26 +15,25 @@ class State(object):
 
     def __init__(self, N, Numbers=None):
 
-        def generate_puzzle_nums(N):
-
+        def generate_puzzle_nums(size):
             def split_list(values):
-                for i in range(0, N*N, N):
-                    yield values[i:i + N]
+                for i in range(0, size * size, size):
+                    yield values[i:i + size]
 
-            starting_sequence = [i for i in range(N*N)]
+            starting_sequence = [i for i in range(size * size)]
             random.shuffle(starting_sequence)
             return split_list(starting_sequence)
 
         self.N = N
-        self.Numbers = list(generate_puzzle_nums(N))    \
-            if Numbers == None                          \
+        self.Numbers = list(generate_puzzle_nums(N)) \
+            if Numbers is None \
             else [[c for c in row] for row in Numbers]
-    
+
     def copy(self):
         return State(self.N, list(self.Numbers))
-    
+
     def write(self):
-        num_width = len(str(self.N**2))
+        num_width = len(str(self.N ** 2))
         for row in self.Numbers:
             row_out = '[ '
             for i in row:
@@ -39,29 +41,29 @@ class State(object):
             row_out += ']'
             print(row_out)
         print('')
-    
+
     def hash(self):
         st = ''
         for i in self.Numbers:
             for j in i:
                 st += str(j) + ','
         return st[:-1]
-    
+
     def check(self):
         i = 1
         for row in self.Numbers:
             for num in row:
-                if i == self.N**2 and num == 0:
+                if i == self.N ** 2 and num == 0:
                     return True
                 elif i != num:
                     break
                 i += 1
         return False
-    
+
     def find(self, val):
-        if val >= self.N**2:
+        if val >= self.N ** 2:
             return [-1, -1]
-        
+
         row = 0
         while row < len(self.Numbers):
             r = self.Numbers[row]
@@ -80,22 +82,22 @@ class State(object):
     def swap(self, pos1, pos2):
         [self.Numbers[get_row(pos1)][get_col(pos1)], self.Numbers[get_row(pos2)][get_col(pos2)]] = \
             [self.Numbers[get_row(pos2)][get_col(pos2)], self.Numbers[get_row(pos1)][get_col(pos1)]]
-    
+
     def getOutOfPlaceCount(self):
         count = 0
         i = 1
         for row in self.Numbers:
             for num in row:
-                if i == self.N**2:
+                if i == self.N ** 2:
                     if num != 0:
                         count += 1
                 elif i != num:
                     count += 1
                 i += 1
         return count
-    
+
     def getManhattanSum(self):
-        
+
         def manhattanDist(pos1, pos2):
             return abs(pos1[0] - pos2[0]) + abs(pos1[1] - pos2[1])
 
@@ -103,7 +105,7 @@ class State(object):
             if val == 0:
                 return [self.N - 1, self.N - 1]
             return [(val - 1) // self.N, (val - 1) % self.N]
-        
+
         total = 0
         row = 0
         while row < len(self.Numbers):
@@ -114,7 +116,7 @@ class State(object):
                 total += manhattanDist([row, col], corr)
                 col += 1
             row += 1
-        
+
         return total
 
 
@@ -125,6 +127,7 @@ def move_left(state):
         return True
     return False
 
+
 def move_right(state):
     empty = state.findEmpty()
     if get_col(empty) > 0:
@@ -132,12 +135,14 @@ def move_right(state):
         return True
     return False
 
+
 def move_up(state):
     empty = state.findEmpty()
     if get_row(empty) < state.N - 1:
         state.swap(empty, [get_row(empty) + 1, get_col(empty)])
         return True
     return False
+
 
 def move_down(state):
     empty = state.findEmpty()
@@ -148,7 +153,6 @@ def move_down(state):
 
 
 def solve_bfs(init, operators, timeout):
-
     print('Using Breadth First Search:')
     start = time.time()
 
@@ -162,7 +166,7 @@ def solve_bfs(init, operators, timeout):
 
         if state.check():
             elapsed = time.time() - start
-            print('Solved in:\t' +  str(elapsed) + ' seconds\n')
+            print('Solved in:\t' + str(elapsed) + ' seconds\n')
             return True
 
         op(state)
@@ -172,29 +176,28 @@ def solve_bfs(init, operators, timeout):
         for op in operators:
             if op(state.copy()):
                 queue.append((state.copy(), op, sequence))
-    
+
     print('Timeout!!\t(' + str(timeout) + ' seconds)\n')
     return False
 
 
 def solve_aStar(init, operators, timeout):
-
     class Item(object):
-        def __init__(self, state, operator, path):
-            self.state = state
+        def __init__(self, st, operator, p):
+            self.state = st
             self.op = operator
-            self.path = path
-        
+            self.path = p
+
         def eval(self):
-            state = self.state.copy()
-            op(state)
-            return state.getOutOfPlaceCount() * 1000 + state.getManhattanSum()
-        
+            st = self.state.copy()
+            op(st)
+            return st.getOutOfPlaceCount() * 1000 + st.getManhattanSum()
+
         def extract(self):
             return [self.state, self.op, self.path]
 
-    def state_op_combo(state, op):
-        return (state.hash(), op.__name__)
+    def state_op_combo(st, oper):
+        return st.hash(), oper.__name__
 
     print('Using A*:')
     start = time.time()
@@ -219,7 +222,7 @@ def solve_aStar(init, operators, timeout):
 
         if state.check():
             elapsed = time.time() - start
-            print('Solved in:\t' +  str(elapsed) + ' seconds\n')
+            print('Solved in:\t' + str(elapsed) + ' seconds\n')
             return True
 
         op(state)
@@ -245,7 +248,6 @@ def solve_aStar(init, operators, timeout):
 
 
 def main():
-
     if len(sys.argv) != 2:
         print('\nUsage: python ' + sys.argv[0] + ' <timeout - seconds>\n')
         return 0
@@ -253,31 +255,29 @@ def main():
     timeout = int(sys.argv[1])
     operators = [move_left, move_right, move_up, move_down]
 
-
     print('\nPuzzle 1:')
-    puzzle1 = State(3, [[1,2,3],[5,0,6],[4,7,8]])
+    puzzle1 = State(3, [[1, 2, 3], [5, 0, 6], [4, 7, 8]])
     puzzle1.write()
     solve_bfs(puzzle1, operators, timeout)
     solve_aStar(puzzle1, operators, timeout)
 
     print('\nPuzzle 2:')
-    puzzle2 = State(3, [[1,3,6],[5,2,0],[4,7,8]])
+    puzzle2 = State(3, [[1, 3, 6], [5, 2, 0], [4, 7, 8]])
     puzzle2.write()
     solve_bfs(puzzle2, operators, timeout)
     solve_aStar(puzzle2, operators, timeout)
 
     print('\nPuzzle 3:')
-    puzzle3 = State(3, [[1,6,2],[5,7,3],[0,4,8]])
+    puzzle3 = State(3, [[1, 6, 2], [5, 7, 3], [0, 4, 8]])
     puzzle3.write()
     solve_bfs(puzzle3, operators, timeout)
     solve_aStar(puzzle3, operators, timeout)
 
     print('\nPuzzle 4:')
-    puzzle4 = State(4, [[5,1,3,4],[2,0,7,8],[10,6,11,12],[9,13,14,15]])
+    puzzle4 = State(4, [[5, 1, 3, 4], [2, 0, 7, 8], [10, 6, 11, 12], [9, 13, 14, 15]])
     puzzle4.write()
     solve_bfs(puzzle4, operators, timeout)
     solve_aStar(puzzle4, operators, timeout)
-
 
     return 0
 
