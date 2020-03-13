@@ -1,0 +1,14 @@
+# pycache
+__pychache__/
+
+# virtual environment
+.Python
+[Bb]in
+[Ii]nclude
+[Ll]ib
+[Ll]ib64
+[Ll]ocal
+[Ss]cripts
+pyvenv.cfg
+.venv
+pip-selfcheck.json
