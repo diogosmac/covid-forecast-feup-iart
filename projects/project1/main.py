@@ -1,4 +1,5 @@
 from dataset import Dataset
+from solution_draft import *
 
 
 def main():
@@ -8,8 +9,9 @@ def main():
     datasetD = Dataset('d_metropolis')
     datasetE = Dataset('e_high_bonus')
 
-    datasetA.first_solve()
-    datasetA.print_solution()
+    first_solve(datasetA)
+
+    first_solve(datasetB)
 
     return 0
 

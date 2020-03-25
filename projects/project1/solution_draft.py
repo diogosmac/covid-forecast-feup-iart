@@ -1,4 +1,5 @@
 from numpy import *
+from tqdm import tqdm
 
 
 def manhattan_distance(v1, v2):
@@ -14,67 +15,81 @@ def first_solve(dataset):
     If so, choose the best one, and then continue.
     """
 
-    dataset.solution = zeros(shape=(dataset.nvehicles, dataset.nrides))
+    def print_solution(d):
+        """
+        For each vehicle, print the rides assigned to it
+        """
+        v = 0
+        while v < d.nvehicles:
+            if dataset.output[v]:
+                output = 'Vehicle ' + str(v) + ':'
+                for r in dataset.output[v]:
+                    output += ' ' + str(r)
+                print(output)
+            v += 1
+
+    dataset.output = [[] for _ in range(dataset.nvehicles)]
+
+    rides_allocated = zeros(dataset.nrides)
+    vehicle_taken = zeros((dataset.nvehicles, dataset.steps))
+    vehicle_positions = [[0, 0] for _ in range(dataset.nvehicles)]
+
+    print('Solving ' + dataset.name + ' . . .')
+    progress = tqdm(total=dataset.steps, desc='Progress')
 
     step = 0
-    rides_allocated = zeros(dataset.nrides)
-    vehicle_steps = zeros(shape=(dataset.nvehicles, dataset.steps))
-    vehicle_positions = [{'current_position': [0, 0]} for _ in range(dataset.nvehicles)]
-
     while step < dataset.steps:
 
-        for v_id, car in enumerate(vehicle_positions):
+        for v_id, v_pos in enumerate(vehicle_positions):
 
-            if vehicle_steps[v_id][step]:
+            if vehicle_taken[v_id][step]:
                 continue
 
-            priority = zeros(dataset.nrides, int)
-            priority[:] = iinfo(int).max
+            r_priority = zeros(dataset.nrides, int)
+            r_priority[:] = iinfo(int).max
 
-            no_rides = True
+            rides_available = False
 
-            r_pointer = -1
-            for ride in dataset.rides:
-                r_pointer += 1
-                if rides_allocated[r_pointer]:
+            for r_id, ride in enumerate(dataset.rides):
+
+                if rides_allocated[r_id]:
                     continue
-                dist_to_car = manhattan_distance(car['current_position'], ride.orig)
+
+                dist_to_car = manhattan_distance(v_pos, ride.orig)
+
                 if step + dist_to_car > dataset.steps:
                     continue
 
-                length = manhattan_distance(ride.orig, ride.dest)
-                if step + dist_to_car + length > ride.latest_finish:
+                ride_len = manhattan_distance(ride.orig, ride.dest)
+                if step + dist_to_car + ride_len > ride.latest_finish:
                     continue
 
                 earliest_start = ride.earliest_start - step
-                priority[v_id] = abs(dist_to_car - earliest_start)
-                no_rides = False
+                r_priority[r_id] = abs(dist_to_car - earliest_start)
 
-            if no_rides:
+                rides_available = True
+
+            if not rides_available:
                 continue
 
-            r_id = int(argmin(priority))
+            r_id = argmin(r_priority)
             ride = dataset.rides[r_id]
             rides_allocated[r_id] = 1
-            dist_to_car = manhattan_distance(car['current_position'], ride.orig)
-            length = manhattan_distance(ride.orig, ride.dest)
+
+            dist_to_car = manhattan_distance(v_pos, ride.orig)
             ride_start = max([step + dist_to_car, ride.earliest_start])
-            vehicle_steps[v_id][step: ride_start + length] = ones(shape=(ride_start + length - step,))
-            car['current_position'] = ride.dest
-            dataset.solution[v_id][r_id] = 1
+            ride_len = manhattan_distance(ride.orig, ride.dest)
+            vehicle_taken[v_id][step: ride_start + ride_len] = ones((ride_start + ride_len - step,))
+
+            dataset.output[v_id].append(r_id)
+            vehicle_positions[v_id] = ride.dest
 
         step += 1
+        progress.update(1)
+
+    progress.close()
+    print("Done!")
+
+    print_solution(dataset)
 
     return True
-
-
-def print_solution(dataset):
-    v_id = 0
-    while v_id < dataset.nvehicles:
-        output = 'Vehicle ' + str(v_id) + ': '
-        i = 0
-        while i < len(dataset.solution[v_id]):
-            if dataset.solution[v_id][i]:
-                output += str(i) + ' '
-        print(output)
-        v_id += 1

@@ -1,7 +1,5 @@
 from ride import Ride
 
-from numpy import zeros
-
 
 class Dataset(object):
 
@@ -19,6 +17,7 @@ class Dataset(object):
 
         self.extractedrides = 0
 
+        self.name = filename
         self.input_str = 'inputs/' + filename + '.in'
         self.output_str = 'outputs/' + filename + '.out'
 
@@ -40,4 +39,3 @@ class Dataset(object):
             for ride in range(self.nrides):
                 self.rides.append(Ride(self.extractedrides, [int(n) for n in f.readline().split()]))
                 self.extractedrides += 1
-            self.solution = zeros(shape=(self.nvehicles, self.nrides))
