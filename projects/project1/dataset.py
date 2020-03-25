@@ -1,5 +1,7 @@
 from ride import Ride
 
+from numpy import zeros
+
 
 class Dataset(object):
 
@@ -17,8 +19,10 @@ class Dataset(object):
 
         self.extractedrides = 0
 
-        path = 'inputs/' + filename + '.in'
-        with open(path, 'r') as f:
+        self.input_str = 'inputs/' + filename + '.in'
+        self.output_str = 'outputs/' + filename + '.out'
+
+        with open(self.input_str, 'r') as f:
             """
             The first line holds the dataset values relative to
             the map, number of vehicles, bonus score and amount
@@ -34,5 +38,6 @@ class Dataset(object):
             """
             self.rides = []
             for ride in range(self.nrides):
-                self.rides.append(Ride(self.extractedrides, f.readline().split()))
+                self.rides.append(Ride(self.extractedrides, [int(n) for n in f.readline().split()]))
                 self.extractedrides += 1
+            self.solution = zeros(shape=(self.nvehicles, self.nrides))

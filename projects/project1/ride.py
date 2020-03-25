@@ -18,15 +18,15 @@ class Ride(object):
         self.dest = list(line[2:4])
 
         # the next value is the minimum (and ideal) start time for the ride
-        self.min_start = line[4]
+        self.earliest_start = line[4]
 
         # the next, and last, value is the maximum end time for the ride
-        self.max_end = line[5]
+        self.latest_finish = line[5]
 
     def write(self):
         output = 'ride ' + str(self.id) + ': '
         output += 'from ' + str(self.orig)
         output += ' to ' + str(self.dest) + ', '
-        output += 'earliest start ' + str(self.min_start) + ', '
-        output += 'latest finish ' + str(self.max_end)
+        output += 'earliest start ' + str(self.earliest_start) + ', '
+        output += 'latest finish ' + str(self.latest_finish)
         print(output)

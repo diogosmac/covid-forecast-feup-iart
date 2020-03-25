@@ -8,6 +8,9 @@ def main():
     datasetD = Dataset('d_metropolis')
     datasetE = Dataset('e_high_bonus')
 
+    datasetA.first_solve()
+    datasetA.print_solution()
+
     return 0
 
 
