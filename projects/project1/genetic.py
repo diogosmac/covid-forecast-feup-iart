@@ -22,14 +22,16 @@ class Genetic(object):
     def mutate(self, chromosome):
         return
 
+
 class Test(object):
 
     def __init__(self, id):
         self.id = id
 
-# testing :)
+
+# testing :) :-]
 if __name__ == "__main__":
-    arr = [Test(1),Test(2),Test(3),Test(2)]
+    arr = [Test(1), Test(2), Test(3), Test(2)]
 
     print([t.id for t in arr])
 

@@ -17,7 +17,7 @@ class Ride(object):
         # the next two values are the coordinates of the destination
         self.dest = list(line[2:4])
 
-        # with orig and dest we can caluclate the distance (score) of the ride
+        # with orig and dest we can calculate the distance (score) of the ride
         self.distance = abs(self.orig[0] - self.dest[0]) + abs(self.orig[1] - self.dest[1])
 
         # the next value is the minimum (and ideal) start time for the ride

@@ -2,6 +2,7 @@ from ride import Ride
 from typing import List
 import random as rd
 
+
 class Car(object):
 
     def __init__(self, total_rides: int):
@@ -9,24 +10,24 @@ class Car(object):
         A car is composed of:
             - a position on the map
             - a current step
-            - a list of alocated rides (Object)
+            - a list of allocated rides (Object)
         """
         self.position = [0, 0]
         self.step = 0
 
-        List[Ride]: self.allocated_rides = []
+        self.allocated_rides: List[Ride] = []
 
     def allocate_ride(self, ride: Ride):
         self.allocated_rides.append(ride)
 
     def remove_ride(self, ride_index: int):
-        for ride in self.rides:
+        for ride in self.allocated_rides:
             if ride.id == ride_index:
                 self.allocated_rides.remove(ride)
                 return
 
     def has_ride(self, ride_index: int):
-        for ride in self.rides:
+        for ride in self.allocated_rides:
             if ride.id == ride_index:
                 return True
         return False
@@ -36,12 +37,12 @@ class Car(object):
 
     def move_to_ride_orig(self, ride: Ride):
         self.step += abs(self.position[0] - ride.orig[0]) + \
-            abs(self.position[1] - ride.orig[1])
+                     abs(self.position[1] - ride.orig[1])
         self.position = ride.orig
 
     def move_to_ride_dest(self, ride: Ride):
         self.step += abs(self.position[0] - ride.dest[0]) + \
-            abs(self.position[1] - ride.dest[1])
+                     abs(self.position[1] - ride.dest[1])
         self.position = ride.dest
 
     def calculate_score(self, bonus: int) -> int:
@@ -52,7 +53,7 @@ class Car(object):
         score = 0
         for ride in self.allocated_rides:
             self.move_to_ride_orig(ride)
-            # bonus if ride is started on earlisted_start step
+            # bonus if ride is started on earliest_start step
             if self.step <= ride.earliest_start:
                 score += bonus
                 self.step = ride.earliest_start
@@ -65,4 +66,3 @@ class Car(object):
 
     def mutate(self) -> int:
         return 0
-

@@ -15,7 +15,7 @@ class Dataset(object):
                of time as the rides are scheduled and executed
         """
 
-        self.extractedrides = 0
+        self.extracted_rides = 0
 
         self.name = filename
         self.input_str = 'inputs/' + filename + '.in'
@@ -37,5 +37,5 @@ class Dataset(object):
             """
             self.rides = []
             for ride in range(self.nrides):
-                self.rides.append(Ride(self.extractedrides, [int(n) for n in f.readline().split()]))
-                self.extractedrides += 1
+                self.rides.append(Ride(self.extracted_rides, [int(n) for n in f.readline().split()]))
+                self.extracted_rides += 1
