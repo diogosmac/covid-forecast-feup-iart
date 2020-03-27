@@ -29,7 +29,7 @@ class Dataset(object):
             the map, number of vehicles, bonus score and amount
             of steps.
             """
-            [self.rows, self.cols, self.nvehicles,
+            [self.rows, self.cols, self.ncars,
              self.nrides, self.bonus, self.steps] = \
                 [int(n) for n in f.readline().split()]
 
@@ -48,7 +48,7 @@ class Dataset(object):
         def manhattan_distance(v1, v2):
             return abs(v1[0] - v2[0]) + abs(v1[1] - v2[1])
 
-        solution = Solution(self.nvehicles, self.rides.copy())
+        solution = Solution(self.ncars, self.rides.copy())
 
         step = 0
         while step < self.steps:
