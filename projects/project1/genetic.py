@@ -6,7 +6,7 @@ import random as rd
 
 class Genetic(object):
 
-    def __init__(self, dataset: Dataset, max_population_size: int = 10000, polling_size: int = 2500, mutation_rate: float = 0.01, constant_generations_num: int = 5):
+    def __init__(self, dataset: Dataset, max_population_size: int = 1000, polling_size: int = 200, mutation_rate: float = 0.01, constant_generations_num: int = 5):
         """
         """
         self.dataset = Dataset
@@ -38,7 +38,7 @@ class Genetic(object):
                 # choose the best n (polling size) of population
                 parent_a = self.population[rd.randint(0, self.polling_size - 1)]
                 parent_b = self.population[rd.randint(0, self.polling_size - 1)]
-                children = parent_a.reproduce(parent_b)
+                children = self.reproduce(parent_a, parent_b)
                 children[0].mutate()
                 children[1].mutate()
                 new_population.append(children[0])
@@ -63,7 +63,7 @@ class Genetic(object):
 
     def create_random_population(self):
         while len(self.population) < self.max_population_size:
-            random_solution: Solution = Solution(self.dataset.nrides, self.dataset.rides.copy())
+            random_solution: Solution = Solution(self.dataset.nrides, self.dataset.rides.copy()).randomize_allocation()
             self.population.append(random_solution)
 
     def constant_generations(self):
@@ -73,6 +73,31 @@ class Genetic(object):
         if len(self.best_fit_queue) == self.constant_generations_num:
             self.best_fit_queue.pop(0)
         self.best_fit_queue.append(self.best_fit)
+
+    def reproduce(self, parent_a: Solution, parent_b: Solution) -> List[Solution]:
+        parent_a_matrix = self.solution_to_matrix(parent_a)
+        parent_b_matrix = self.solution_to_matrix(parent_b)
+        child_a_matrix: List[List[bool]] = []
+        child_b_matrix: List[List[bool]] = []
+
+        crossover_index: int = rd.randint(0, self.nrides)
+        for my_car, parent_car in zip(parent_a_matrix, parent_b_matrix):
+            child_a_matrix.append(my_car[0:crossover_index] + parent_car[crossover_index:self.nrides])
+            child_b_matrix.append(parent_car[0:crossover_index] + my_car[crossover_index:self.nrides])
+
+        return [self.matrix_to_solution(child_a_matrix), self.matrix_to_solution(child_b_matrix)]
+
+    def solution_to_matrix(self, solution: Solution) -> List[List[bool]]:
+        matrix: List[List[bool]] = []
+        for car in solution.cars:
+            binary_list: List[bool] = [False] * len(car.allocated_rides)
+            for ride in car.allocated_rides:
+                binary_list[ride.id] = True
+            matrix.append(binary_list)
+        return matrix
+
+    def matrix_to_solution(self, matrix: List[List[bool]]) -> Solution:
+        return Solution(self.dataset.nvehicles, self.dataset.rides).matrix_allocation(matrix)
 
     def write(self):
         print('Generation {} best fit: {}'.format(self.generation, self.best_fit.fitness))

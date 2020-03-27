@@ -11,6 +11,7 @@ class Solution(object):
         self.cars: List[Car] = cars
         self.unallocated_rides: List[Ride] = rides
         self.fitness: int = 0
+        self.nrides = len(rides)
 
     def copy(self):
         return Solution([car.copy() for car in self.cars], [ride.copy() for ride in self.unallocated_rides])
@@ -29,11 +30,18 @@ class Solution(object):
         self.cars[len(self.cars)].allocate_rides(self.unallocated_rides)
         self.unallocated_rides.clear()
 
+    def matrix_allocation(self, binary_matrix: List[List[bool]]):
+        for car, binary_list in zip(self.cars, binary_matrix):
+            # get indexes of True elements in binary list
+            allocated_rides: List[Ride] = [self.unallocated_rides[ride_index] for ride_index, val in enumerate(binary_list) if val]
+            car.allocate_rides(allocated_rides)
+        self.unallocated_rides = []
+
     def mutate(self):
+        """
+        TO DELETE
+        """
         #rd.choice(self.cars).mutate()
-        return
-        
-    def reproduce(self, parent) -> List[Solution]:
         return
 
     def write(self):
