@@ -1,4 +1,6 @@
 from dataset import Dataset
+from car import Car
+from solution import Solution
 from hill_climbing import HillClimbing
 
 
@@ -11,6 +13,9 @@ def main():
 
     hill_climbing = HillClimbing(datasetA, 10000)
     hill_climbing.write()
+
+    # get_neighbors test
+    #Solution([Car() for _ in range(datasetA.ncars)], datasetA.rides.copy()).get_neighbors()[0].get_neighbors()
 
     return 0
 

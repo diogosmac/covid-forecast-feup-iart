@@ -26,5 +26,36 @@ class Solution(object):
             print('Car ' + str(i) + ': ' + ' '.join(['%d'] * len(car.allocated_rides))
                   % tuple([ride.id for ride in car.allocated_rides]))
 
+    # Progressively allocates rides
     def get_neighbors(self):
-        return self
+        sol_list = []
+
+        ride_starting_index = 0
+
+        while ride_starting_index < (len(self.unallocated_rides)):
+            ride_index = ride_starting_index
+
+            # generate a new solution
+            new_car_list = []
+            new_ride_list = self.unallocated_rides.copy()
+
+            for car_index in range(0, len(self.cars)):
+                current_car = self.cars[car_index].copy()
+                current_ride = self.unallocated_rides[ride_index]
+
+                if current_ride in new_ride_list:
+                    current_car.allocate_ride(current_ride)  # add the ride to the car
+                    new_ride_list.remove(current_ride)  # remove the ride from the list
+
+                new_car_list.append(current_car)  # add the car to the list
+
+                ride_index = (ride_index + 1) % (len(self.unallocated_rides))
+
+            # Add the solution
+            sol = Solution(new_car_list, new_ride_list)
+            sol_list.append(sol)
+            sol.write()
+
+            ride_starting_index += 1
+
+        return sol_list

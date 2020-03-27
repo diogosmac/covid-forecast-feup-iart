@@ -23,6 +23,8 @@ class Car(object):
         new.step = self.step
         new.allocated_rides = [ride.copy() for ride in self.allocated_rides]
 
+        return new
+
     def allocate_ride(self, ride: Ride):
         self.allocated_rides.append(ride)
 
