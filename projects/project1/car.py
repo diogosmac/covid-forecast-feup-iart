@@ -1,4 +1,5 @@
 from ride import Ride
+from typing import List
 import random as rd
 
 class Car(object):
@@ -13,7 +14,7 @@ class Car(object):
         self.position = [0, 0]
         self.step = 0
 
-        Ride: self.allocated_rides = []
+        List[Ride]: self.allocated_rides = []
 
     def allocate_ride(self, ride: Ride):
         self.allocated_rides.append(ride)
