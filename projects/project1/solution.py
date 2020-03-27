@@ -17,7 +17,7 @@ class Solution(object):
 
     def calculate_fitness(self):
         self.fitness = sum(car.score for car in self.cars)
-        
+
     def randomize_allocation(self):
         rides_per_car: int = len(self.unallocated_rides) // len(self.cars)
         # allocate random rides to cars
