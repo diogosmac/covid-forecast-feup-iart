@@ -5,12 +5,12 @@ import random as rd
 
 class Car(object):
 
-    def __init__(self, total_rides: int):
+    def __init__(self):
         """
         A car is composed of:
-            - a position on the map
-            - a current step
-            - a list of allocated rides (Object)
+            A position on the map;
+            A current step;
+            A list of allocated rides (Object).
         """
         self.position = [0, 0]
         self.step = 0

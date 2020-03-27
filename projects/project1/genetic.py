@@ -25,8 +25,8 @@ class Genetic(object):
 
 class Test(object):
 
-    def __init__(self, id):
-        self.id = id
+    def __init__(self, ident):
+        self.id = ident
 
 
 # testing :) :-]
