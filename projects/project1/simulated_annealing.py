@@ -1,7 +1,9 @@
-from hill_climbing import HillClimbing
+import math
+import random
+
 from dataset import Dataset
+from hill_climbing import HillClimbing
 from solution import Solution
-import math, random
 
 
 class SimulatedAnnealing(HillClimbing):

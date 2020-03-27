@@ -1,6 +1,5 @@
 from ride import Ride
 from typing import List
-import random as rd
 
 
 class Car(object):
