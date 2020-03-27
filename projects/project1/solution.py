@@ -10,13 +10,24 @@ class Solution(object):
     def __init__(self, cars: List[Car], rides: List[Ride]):
         self.cars: List[Car] = cars
         self.unallocated_rides: List[Ride] = rides
-        self.fitness = 0
+        self.fitness: int = 0
 
     def copy(self):
         return Solution([car.copy() for car in self.cars], [ride.copy() for ride in self.unallocated_rides])
 
     def calculate_fitness(self):
         self.fitness = sum(car.score for car in self.cars)
+        
+    def randomize_allocation(self):
+        rides_per_car: int = len(self.unallocated_rides) // len(self.cars)
+        # allocate random rides to cars
+        for car_index in range(self.cars - 1):
+            allocated_rides: List[Ride] = rd.sample(self.unallocated_rides, rides_per_car)
+            self.cars[car_index].allocate_rides(allocated_rides)
+            self.unallocated_rides = list(set(self.unallocated_rides) - set(allocated_rides))
+        # last car is allocated the rest of unallocated rides
+        self.cars[len(self.cars)].allocate_rides(self.unallocated_rides)
+        self.unallocated_rides.clear()
 
     def mutate(self):
         rd.choice(self.cars).mutate()

@@ -33,6 +33,9 @@ class Car(object):
         self.sort_rides()
         self.calculate_score()
 
+    def allocate_rides(self, rides: List[Ride]):
+        self.allocated_rides = rides
+
     def remove_ride(self, ride_index: int):
         for ride in self.allocated_rides:
             if ride.id == ride_index:
