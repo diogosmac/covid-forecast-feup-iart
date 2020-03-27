@@ -4,10 +4,10 @@ from dataset import Dataset
 
 class SteepestAscent(HillClimbing):
 
-    def __init__(self, dataset: Dataset):
-        super().__init__(dataset)
+    def __init__(self, dataset: Dataset, max_iter: int = 10000):
+        super().__init__(dataset, max_iter)
 
-    def choose_next(self):
+    def climb_hill(self):
 
         neighbors = self.solution.get_neighbors()
 
