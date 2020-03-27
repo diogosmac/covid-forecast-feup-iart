@@ -1,6 +1,5 @@
 from dataset import Dataset
 from hill_climbing import HillClimbing
-from solution_draft import *
 
 
 def main():

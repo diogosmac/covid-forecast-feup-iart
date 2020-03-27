@@ -29,6 +29,10 @@ class Ride(object):
         # the next value is the minimum (and ideal) start time for the ride
         self.latest_start = self.latest_finish - self.distance
 
+    def copy(self):
+        return Ride(self.id,
+                    [self.orig[0], self.orig[1], self.dest[0], self.dest[1], self.earliest_start, self.latest_finish])
+
     def write(self):
         output = 'ride ' + str(self.id) + ': '
         output += 'from ' + str(self.orig)

@@ -48,7 +48,7 @@ class Dataset(object):
         def manhattan_distance(v1, v2):
             return abs(v1[0] - v2[0]) + abs(v1[1] - v2[1])
 
-        solution = Solution(self.ncars, self.rides.copy())
+        solution = Solution([Car() for _ in range(self.ncars)], self.rides.copy())
 
         step = 0
         while step < self.steps:

@@ -17,6 +17,12 @@ class Car(object):
 
         self.allocated_rides: List[Ride] = []
 
+    def copy(self):
+        new = Car()
+        new.position = self.position
+        new.step = self.step
+        new.allocated_rides = [ride.copy() for ride in self.allocated_rides]
+
     def allocate_ride(self, ride: Ride):
         self.allocated_rides.append(ride)
 
