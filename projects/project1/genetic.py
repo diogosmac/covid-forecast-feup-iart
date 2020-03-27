@@ -1,19 +1,36 @@
+from typing import List
+from dataset import Dataset
+from solution import Solution
+
+import random as rd
+
 class Genetic(object):
 
-    def __init__(self, population_size, polling_size, mutation_rate, max_generation_size: int):
+    def __init__(self, dataset: Dataset, population_size: int = 10000, polling_size: int = 2500, mutation_rate: int = 0.01, constant_generations_num: int = 5):
+        """
+        """
+        self.dataset = Dataset
+
+        self.population: List[Solution] = []
         self.population_size = population_size
         self.polling_size = polling_size
         self.mutation_rate = mutation_rate
-        self.max_generation_size = max_generation_size
-        self.best_fit_queue = []
+        self.constant_generations_num = constant_generations_num
+        self.best_fit_queue = [i for i in range(5)]
+
+    def execute(self):
+        return 0
+
+    def create_random_population(self):
+        while len(self.population) < self.population_size:
+            self.population.append(Solution())
 
     def constant_generations(self):
         return len(set(self.best_fit_queue)) == 1
 
     def queue_best_fit(self, generation):
-        if len(self.best_fit_queue) == self.max_generation_size:
+        if len(self.best_fit_queue) == self.constant_generations_num:
             self.best_fit_queue.pop(0)
-
         self.best_fit_queue.append(generation)
 
     def reproduce(self, parent_a, parent_b):
