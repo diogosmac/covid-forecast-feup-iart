@@ -1,6 +1,9 @@
 # pycache
 __pycache__/
 
+# testing :>
+test.py
+
 # virtual environment
 .Python
 [Bb]in

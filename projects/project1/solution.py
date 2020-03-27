@@ -27,4 +27,4 @@ class Solution(object):
                   % tuple([ride.id for ride in car.allocated_rides]))
 
     def get_neighbors(self):
-        return self
+        return [self, self]
