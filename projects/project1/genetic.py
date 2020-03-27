@@ -23,23 +23,41 @@ class Genetic(object):
     def execute(self):
         # create first population
         self.create_random_population()
+        # calculate new population's fitness
         for solution in self.population:
             solution.calculate_fitness()
+        # sort from best to worst
         self.sort_population()
         self.best_fit = self.population[0]
+        self.write()
 
         while not self.constant_generations():
-            # enqueue best solution in current population
+            # create new population
+            new_population: List[Solution] = []
+            while len(new_population) < self.max_population_size:
+                # choose the best n (polling size) of population
+                parent_a = self.population[rd.randint(0, self.polling_size - 1)]
+                parent_b = self.population[rd.randint(0, self.polling_size - 1)]
+                children = parent_a.reproduce(parent_b)
+                children[0].mutate()
+                children[1].mutate()
+                new_population.append(children[0])
+                new_population.append(children[1])
+
+            self.population = new_population
+            self.generation += 1
+            # calculate new population's fitness
+            for solution in self.population:
+                solution.calculate_fitness()
+            # sort from best to worst
+            self.sort_population()
+            # new best might not be better than the old best
             if self.population[0].fitness > self.best_fit.fitness:
                 self.best_fit = self.population[0]
+            # enqueue best solution in current population
             self.queue_best_fit()
+            self.write()
 
-            # create new population
-            new_population = []
-            while len(new_population) < self.max_population_size:
-                self.reproduce()
-
-            
     def sort_population(self):
         self.population.sort(key=lambda solution: solution.fitness, reverse=True)
 
@@ -55,14 +73,6 @@ class Genetic(object):
         if len(self.best_fit_queue) == self.constant_generations_num:
             self.best_fit_queue.pop(0)
         self.best_fit_queue.append(self.best_fit)
-
-    def reproduce(self):
-        # choose the best n (polling size) of population
-        
-        return
-
-    def mutate(self):
-        return
 
     def write(self):
         print('Generation {} best fit: {}'.format(self.generation, self.best_fit.fitness))

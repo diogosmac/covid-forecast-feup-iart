@@ -30,7 +30,11 @@ class Solution(object):
         self.unallocated_rides.clear()
 
     def mutate(self):
-        rd.choice(self.cars).mutate()
+        #rd.choice(self.cars).mutate()
+        return
+        
+    def reproduce(self, parent) -> List[Solution]:
+        return
 
     def write(self):
         for i, car in enumerate(self.cars):
