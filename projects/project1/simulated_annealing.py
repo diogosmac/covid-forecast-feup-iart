@@ -9,9 +9,9 @@ from tqdm import tqdm
 
 
 class SimulatedAnnealing(HillClimbing):
-    def __init__(self, dataset: Dataset, max_iter: int = 10000, from_scratch: bool = False, random: bool = False,
+    def __init__(self, dataset: Dataset, max_iter: int = 10000, random: bool = False,
                  start_temperature: float = 100, decrease_rate: float = 0.01, limit_temp: float = 1):
-        super().__init__(dataset=dataset, max_iter=max_iter, from_scratch=from_scratch, random=random)
+        super().__init__(dataset=dataset, max_iter=max_iter, random=random)
         self.start_temperature = start_temperature
         self.decrease_rate = decrease_rate
         self.limit_temp = limit_temp

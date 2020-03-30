@@ -3,14 +3,13 @@ import random as rd
 from hill_climbing import HillClimbing
 from dataset import Dataset
 from typing import List
-from solution import Solution
 from ride import Ride
 
 
 class SteepestAscent(HillClimbing):
 
-    def __init__(self, dataset: Dataset, max_iter: int = 10000, from_scratch: bool = False, random: bool = False):
-        super().__init__(dataset=dataset, max_iter=max_iter, from_scratch=from_scratch, random=random)
+    def __init__(self, dataset: Dataset, max_iter: int = 10000, random: bool = False):
+        super().__init__(dataset=dataset, max_iter=max_iter, random=random)
 
     def climb_hill(self):
 

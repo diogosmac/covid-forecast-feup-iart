@@ -7,9 +7,9 @@ import random as rd
 
 class HillClimbing(object):
 
-    def __init__(self, dataset: Dataset, max_iter: int = 10000, from_scratch: bool = False, random: bool = False):
+    def __init__(self, dataset: Dataset, max_iter: int = 10000, random: bool = False):
         self.dataset = dataset
-        self.solution = (dataset.empty_solution() if from_scratch else dataset.greedy_solve())
+        self.solution = dataset.solution.copy()
         self.iteration_limit = max_iter
         self.random = random
 

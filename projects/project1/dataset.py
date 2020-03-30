@@ -7,7 +7,7 @@ import numpy as np
 
 class Dataset(object):
 
-    def __init__(self, filename):
+    def __init__(self, filename, from_scratch: bool = False):
         """
         A Dataset is composed of:
             A map, defined by the number of rows and columns, as a grid;
@@ -43,6 +43,10 @@ class Dataset(object):
                 self.rides.append(Ride(self.extracted_rides, [int(n) for n in f.readline().split()]))
                 self.extracted_rides += 1
 
+        if from_scratch:
+            self.solution = self.empty_solution()
+        else:
+            self.solution = self.greedy_solve()
 
     def empty_solution(self) -> Solution:
         return Solution([Car(self.bonus) for _ in range(self.ncars)], self.rides.copy())
@@ -104,4 +108,3 @@ class Dataset(object):
         progress.close()
 
         return solution
-
