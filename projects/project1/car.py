@@ -4,7 +4,7 @@ from typing import List
 
 class Car(object):
 
-    def __init__(self):
+    def __init__(self, bonus: int):
         """
         A car is composed of:
             A position on the map;
@@ -13,24 +13,32 @@ class Car(object):
         """
         self.position = [0, 0]
         self.step = 0
+        self.bonus = bonus
 
         self.allocated_rides: List[Ride] = []
 
+        self.score = 0
+
     def copy(self):
-        new = Car()
+        new = Car(self.bonus)
         new.position = self.position
         new.step = self.step
         new.allocated_rides = [ride.copy() for ride in self.allocated_rides]
+        new.score = self.score
 
         return new
 
     def allocate_ride(self, ride: Ride):
         self.allocated_rides.append(ride)
+        self.sort_rides()
+        self.calculate_score()
 
     def remove_ride(self, ride_index: int):
         for ride in self.allocated_rides:
             if ride.id == ride_index:
                 self.allocated_rides.remove(ride)
+                self.sort_rides()
+                self.calculate_score()
                 return
 
     def has_ride(self, ride_index: int):
@@ -52,7 +60,7 @@ class Car(object):
                      abs(self.position[1] - ride.dest[1])
         self.position = ride.dest
 
-    def calculate_score(self, bonus: int) -> int:
+    def calculate_score(self):
         self.position = [0, 0]
         self.step = 0
         self.sort_rides()
@@ -62,14 +70,14 @@ class Car(object):
             self.move_to_ride_orig(ride)
             # bonus if ride is started on earliest_start step
             if self.step <= ride.earliest_start:
-                score += bonus
+                score += self.bonus
                 self.step = ride.earliest_start
             self.move_to_ride_orig(ride)
             # if ride is made on time calculate score
             if self.step <= ride.latest_finish:
                 score = ride.distance
 
-        return score
+        self.score = score
 
     def mutate(self) -> int:
         return 0

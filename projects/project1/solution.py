@@ -15,8 +15,8 @@ class Solution(object):
     def copy(self):
         return Solution([car.copy() for car in self.cars], [ride.copy() for ride in self.unallocated_rides])
 
-    def calculate_fitness(self, bonus: int):
-        self.fitness = sum(car.calculate_score(bonus) for car in self.cars)
+    def calculate_fitness(self):
+        self.fitness = sum(car.score for car in self.cars)
 
     def mutate(self):
         rd.choice(self.cars).mutate()
@@ -28,11 +28,12 @@ class Solution(object):
 
     # Progressively allocates rides
     def get_neighbors(self):
-        sol_list = []
 
+        sol_list = []
         ride_starting_index = 0
 
-        while ride_starting_index < (len(self.unallocated_rides)):
+        while ride_starting_index < len(self.unallocated_rides):
+
             ride_index = ride_starting_index
 
             # generate a new solution
@@ -54,7 +55,6 @@ class Solution(object):
             # Add the solution
             sol = Solution(new_car_list, new_ride_list)
             sol_list.append(sol)
-            sol.write()
 
             ride_starting_index += 1
 

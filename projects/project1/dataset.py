@@ -1,6 +1,7 @@
 from car import Car
 from ride import Ride
 from solution import Solution
+from tqdm import tqdm
 import numpy as np
 
 
@@ -43,14 +44,19 @@ class Dataset(object):
                 self.extracted_rides += 1
 
 
+    def empty_solution(self) -> Solution:
+        return Solution([Car(self.bonus) for _ in range(self.ncars)], self.rides.copy())
+
     def greedy_solve(self) -> Solution:
 
         def manhattan_distance(v1, v2):
             return abs(v1[0] - v2[0]) + abs(v1[1] - v2[1])
 
-        solution = Solution([Car() for _ in range(self.ncars)], self.rides.copy())
+        solution = Solution([Car(self.bonus) for _ in range(self.ncars)], self.rides.copy())
 
         step = 0
+        progress = tqdm(total=self.steps, desc='Building initial solution')
+
         while step < self.steps:
 
             for car in solution.cars:
@@ -93,6 +99,9 @@ class Dataset(object):
                 solution.unallocated_rides.remove(ride)
 
             step += 1
+            progress.update(1)
+
+        progress.close()
 
         return solution
 
