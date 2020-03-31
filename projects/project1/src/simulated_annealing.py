@@ -2,9 +2,9 @@ import math
 import random as rd
 import time as tm
 
-from dataset import Dataset
-from hill_climbing import HillClimbing
-from ride import Ride
+from src.dataset import Dataset
+from src.hill_climbing import HillClimbing
+from src.ride import Ride
 from typing import List
 from tqdm import tqdm
 

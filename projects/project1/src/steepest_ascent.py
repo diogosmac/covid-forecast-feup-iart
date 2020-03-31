@@ -1,15 +1,16 @@
-from dataset import Dataset
-from ride import Ride
-from typing import List
-from tqdm import tqdm
 import random as rd
-import time as tm
+
+from src.hill_climbing import HillClimbing
+from src.dataset import Dataset
+from typing import List
+from src.ride import Ride
 
 
-class HillClimbing(object):
+class SteepestAscent(HillClimbing):
     """
-    A class to execute a Hill Climbing algorithm to solve the Self Driving Rides
-    problem, given the dataset and algorithm related attributes
+    A specific implementation of the Hill Climbing algorithm to solve the Self
+    Driving Rides problem, given the dataset and algorithm related attributes,
+    which always advances to the most advantageous of all neighbors
 
     ...
 
@@ -26,12 +27,8 @@ class HillClimbing(object):
 
     Methods
     -------
-    write()
-        writes the current solution for the problem
-    solve()
-        executes the algorithm to solve the problem
     climb_hill()
-        advances to the first neighbor which improves on the current solution
+        advances to the best possible neighbor which improves on the current solution
     """
 
     def __init__(self, dataset: Dataset, max_iter: int = 10000, random: bool = False):
@@ -45,52 +42,14 @@ class HillClimbing(object):
         random : bool
             determines whether the neighbors will be visited in random order
         """
-        self.dataset = dataset
-        self.solution = dataset.solution.copy()
-        self.iteration_limit = max_iter
-        self.random = random
+        super().__init__(dataset=dataset, max_iter=max_iter, random=random)
 
-    def write(self):
-        self.solution.write()
-
-    def solve(self):
-        # Starts by calculating the score before the algorithm execution
-        self.solution.calculate_fitness()
-        initial_score = self.solution.fitness
-        print('Initial Score: {}'.format(self.solution.fitness))
-        # Progress bar will give a visual indication of the work being done
-        iteration = 0
-        progress = tqdm(total=self.iteration_limit, desc='Climbing the Hill')
-        # Time will be recorded for statistical purposes
-        start = tm.time()
-        # Executes until it reaches the limit of iterations (or until it reaches an end condition)
-        while iteration < self.iteration_limit:
-            advance = self.climb_hill()
-            # Ends if no better neighbors are found
-            if not advance:
-                break
-            # Displays the current score after an iteration
-            progress.set_postfix_str('Current Score = {}, Time Elapsed = {:.2f} seconds'.format(
-                self.solution.fitness, tm.time() - start
-            ))
-            # progress.set_postfix_str('Current Score: {}'.format(self.solution.fitness))
-            # Advances the iteration counter, updates the progress bar (for clarity)
-            iteration += 1
-            progress.update(1)
-
-        # Records the elapsed time, for statistical purposes
-        elapsed = tm.time() - start
-        progress.update(self.iteration_limit - iteration)
-        progress.set_postfix_str('Final Score = {}, Time Elapsed = {:.2f} seconds'.format(
-            self.solution.fitness, tm.time() - start
-        ))
-        progress.close()
-        print('Final Score: {}, Gain in Score: {}, Time Elapsed = {:.2f} seconds'.format(
-            self.solution.fitness, self.solution.fitness - initial_score, elapsed))
-
-    def climb_hill(self) -> bool:
-        # Stores the initial score, for comparison purposes
+    def climb_hill(self):
+        # Stores the current solution and score
+        sol = self.solution
         score = self.solution.fitness
+        # Indicates whether a better neighbor has been found
+        improved = False
         # A ride can be present in each of the cars, or in the unallocated ride list
         possible_ride_placements: List[int] = list(range(self.dataset.ncars + 1))
         # A first decision will be made, which is where to take a ride from
@@ -128,16 +87,25 @@ class HillClimbing(object):
                     # Updates the score where needed
                     if ride_orig != len(self.solution.cars): self.solution.cars[ride_orig].calculate_score()
                     if ride_dest != len(self.solution.cars): self.solution.cars[ride_dest].calculate_score()
-                    # Calculate neighbor's fitness, advance if it improves upon the current solution.
+                    # Calculate neighbor's fitness, record the neighbor if it is the best one found
                     self.solution.calculate_fitness()
                     if self.solution.fitness > score:
-                        return True
-                    # If not, reverse the changes, continue searching
+                        # Stores a copy of the better neighbor, as well as its score
+                        sol = self.solution.copy()
+                        sol.calculate_fitness()
+                        score = sol.fitness
+                        # At least one better neighbor has been found! :)
+                        improved = True
+                    # Reverses the changes, to continue searching
                     place_into.remove(ride)
                     take_from.append(ride)
                     # Restores the score to where it was before the attempted changes
                     if ride_orig != len(self.solution.cars): self.solution.cars[ride_orig].calculate_score()
                     if ride_dest != len(self.solution.cars): self.solution.cars[ride_dest].calculate_score()
 
-        # If no neighbors improve on the solution, the algorithm is complete!
+        # If a better neighbor was found, update solution and continue execution
+        if improved:
+            self.solution = sol
+            return True
+        # If no better neighbor was found, terminate execution
         return False

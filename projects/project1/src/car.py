@@ -1,4 +1,4 @@
-from ride import Ride
+from src.ride import Ride
 from typing import List
 
 

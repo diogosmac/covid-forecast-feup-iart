@@ -1,8 +1,8 @@
 import sys
 
-from car import Car
-from ride import Ride
-from solution import Solution
+from src.car import Car
+from src.ride import Ride
+from src.solution import Solution
 from tqdm import tqdm
 
 

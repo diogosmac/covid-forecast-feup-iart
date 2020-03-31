@@ -1,8 +1,8 @@
 import random as rd
 
 from typing import List
-from car import Car
-from ride import Ride
+from src.car import Car
+from src.ride import Ride
 
 
 class Solution(object):

@@ -1,9 +1,9 @@
 import sys
 
-from dataset import Dataset
-from hill_climbing import HillClimbing
-from steepest_ascent import SteepestAscent
-from simulated_annealing import SimulatedAnnealing
+from src.dataset import Dataset
+from src.hill_climbing import HillClimbing
+from src.steepest_ascent import SteepestAscent
+from src.simulated_annealing import SimulatedAnnealing
 
 
 def main():

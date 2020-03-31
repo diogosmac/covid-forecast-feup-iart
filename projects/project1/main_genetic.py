@@ -1,7 +1,7 @@
 import sys
 
-from dataset import Dataset
-from genetic import Genetic
+from src.dataset import Dataset
+from src.genetic import Genetic
 
 
 def main():

@@ -1,8 +1,8 @@
 from typing import List
-from dataset import Dataset
-from solution import Solution
+from src.dataset import Dataset
+from src.solution import Solution
 from tqdm import tqdm
-from car import Car
+from src.car import Car
 import time as tm
 import random as rd
 
