@@ -1,10 +1,11 @@
+import random as rd
+
 from typing import List
 from dataset import Dataset
 from solution import Solution
 from tqdm import tqdm
 from car import Car
 
-import random as rd
 
 class Genetic(object):
     """
@@ -53,7 +54,7 @@ class Genetic(object):
         returns two chromosomes which were the result of crossing over parent_a and parent_b
     solution_to_matrix(solution : Solution) -> List[Solution]
         transforms the chromosome in a two-dimensional binary list representation
-    matix_to_solution(matrix: List[List[bool]]) -> Solution
+    matrix_to_solution(matrix: List[List[bool]]) -> Solution
         transforms a two-dimensional binary list into a chromosome
     write() -> str
         returns a string containing the information about the current generation
