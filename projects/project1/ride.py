@@ -1,31 +1,53 @@
+from typing import List
+
+
 class Ride(object):
+    """
+    A class that keeps all information relative to a ride
 
-    def __init__(self, ident, line):
+    ...
+
+    Attributes
+    ----------
+    id : int
+        the id of the ride, relative to the dataset
+    orig : List[int]
+        the coordinates of the starting point for the ride
+    dest : List[int]
+        the coordinates of the finish point for the ride
+    distance : int
+        the Manhattan distance between the ride's starting and finish points
+    earliest_start : int
+        the earliest step in the problem at which the ride can be started
+    latest_finish : int
+        the latest step at which the ride must be finished in order to be scored
+    latest_start : int
+        the latest time at which a ride can be started in order to still finish on time
+
+    Methods
+    -------
+    copy()
+        generates a different Ride object, with the same characteristics as the one for which it is called
+    write()
+        prints the ride's information to the console
+    """
+
+    def __init__(self, ident: int, line: List[int]):
         """
-        A Ride is composed of:
-            - a start point (orig), which is a position on the map [x, y]
-            - a finish point (dest), which is a position on the map [x, y]
-            - an earliest start time (min_start)
-            - a latest finish time (max_end)
+        Parameters
+        ----------
+        ident : int
+            the id for the ride
+        line : List[int]
+            the numerical inputs used to generate the ride
         """
-        # each ride has an ID, for assignment in the end
         self.id = ident
-
-        # first two values in the line are the coordinates of the origin
         self.orig = list(line[0:2])
-
-        # the next two values are the coordinates of the destination
         self.dest = list(line[2:4])
-
+        self.earliest_start = line[4]
+        self.latest_finish = line[5]
         # with orig and dest we can calculate the distance (score) of the ride
         self.distance = abs(self.orig[0] - self.dest[0]) + abs(self.orig[1] - self.dest[1])
-
-        # the next value is the minimum (and ideal) start time for the ride
-        self.earliest_start = line[4]
-
-        # the next, and last, value is the maximum end time for the ride
-        self.latest_finish = line[5]
-
         # the next value is the minimum (and ideal) start time for the ride
         self.latest_start = self.latest_finish - self.distance
 
@@ -34,10 +56,5 @@ class Ride(object):
                     [self.orig[0], self.orig[1], self.dest[0], self.dest[1], self.earliest_start, self.latest_finish])
 
     def write(self):
-        output = 'ride ' + str(self.id) + ': '
-        output += 'from ' + str(self.orig)
-        output += ' to ' + str(self.dest) + ', '
-        output += ' total distance ' + str(self.distance) + ', '
-        output += 'earliest start ' + str(self.earliest_start) + ', '
-        output += 'latest finish ' + str(self.latest_finish)
-        print(output)
+        print('ride {}: from {} to {}, total distance {}, earliest start {}, latest finish {}'.format(
+            self.id, self.orig, self.dest, self.distance, self.earliest_start, self.latest_finish))

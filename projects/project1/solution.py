@@ -6,15 +6,54 @@ from ride import Ride
 
 
 class Solution(object):
+    """
+    A class that saves any given solution to the Self Driving Rides problem
+
+    ...
+
+    Attributes
+    ----------
+    cars : List[Car]
+        list of available cars, relative to the dataset
+    unallocated_rides : List[Ride]
+        list of rides that are not allocated to any car
+    fitness : int
+        the score for a given solution
+    nrides : int
+        the total number of rides, relative to the dataset
+
+    Methods
+    -------
+    copy()
+        generates a copy of the solution, which can be manipulated independently
+    calculate_fitness()
+        calculates the solution's score
+    randomize_allocation()
+        allocates all rides on the solution to cars, randomly
+    matrix_allocation()
+        allocates the rides to cars based on a binary matrix
+    mutate()
+        transforms a solution into a random neighbor
+    write()
+        prints the solution to the console
+    """
 
     def __init__(self, cars: List[Car], rides: List[Ride]):
+        """
+        Parameters
+        ----------
+        cars : List[Car]
+            list of cars belonging to the solution
+        rides : List[Ride]
+            
+        """
         self.cars: List[Car] = cars
         self.unallocated_rides: List[Ride] = rides
         self.fitness: int = 0
         self.nrides = len(rides)
 
     def copy(self):
-        return Solution([car.copy() for car in self.cars], [ride.copy() for ride in self.unallocated_rides])
+        return Solution([car.copy() for car in self.cars], self.unallocated_rides.copy())
 
     def calculate_fitness(self):
         self.fitness = sum(car.score for car in self.cars)
@@ -35,7 +74,8 @@ class Solution(object):
     def matrix_allocation(self, binary_matrix: List[List[bool]]):
         for car, binary_list in zip(self.cars, binary_matrix):
             # get indexes of True elements in binary list
-            allocated_rides: List[Ride] = [self.unallocated_rides[ride_index] for ride_index, val in enumerate(binary_list) if val]
+            allocated_rides: List[Ride] = \
+                [self.unallocated_rides[ride_index] for ride_index, val in enumerate(binary_list) if val]
             car.allocate_rides(allocated_rides)
             car.calculate_score()
         self.unallocated_rides = []

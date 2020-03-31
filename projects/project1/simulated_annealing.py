@@ -89,15 +89,13 @@ class SimulatedAnnealing(HillClimbing):
                 # Ends if limit temperature has been reached and no better neighbors have been found
                 if not improved:
                     break
-            # Displays the current score after an iteration, with a minimum interval of 2 seconds
-            if tm.time() - time > 2:
-                progress.write('Current Score: {}'.format(self.solution.fitness))
-                time = tm.time()
+            # Displays the current score after an iteration
+            progress.set_postfix_str('Current Score: {}'.format(self.solution.fitness))
 
         # Records the elapsed time, for statistical purposes
         elapsed = tm.time() - start
         progress.update(self.iteration_limit - iteration)
-        progress.write('Final Score: {}'.format(self.solution.fitness))
+        progress.write('\nFinal Score: {}'.format(self.solution.fitness))
         progress.write('Gain in Score: {}'.format(self.solution.fitness - initial_score))
         progress.write('Time elapsed: {} seconds'.format(elapsed))
         progress.close()
