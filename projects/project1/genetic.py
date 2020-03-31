@@ -1,13 +1,14 @@
 from typing import List
 from dataset import Dataset
 from solution import Solution
+from tqdm import tqdm
 from car import Car
 
 import random as rd
 
 class Genetic(object):
 
-    def __init__(self, dataset: Dataset, max_population_size: int = 1000, polling_size: int = 200, mutation_rate: float = 0.01, constant_generations_num: int = 5):
+    def __init__(self, dataset: Dataset, max_population_size: int = 1000, polling_size: int = 100, mutation_rate: float = 0.01, constant_generations_num: int = 10, max_generations: int = 200):
         """
         """
         self.dataset = dataset
@@ -20,8 +21,10 @@ class Genetic(object):
         self.constant_generations_num: int = constant_generations_num
         self.best_fit: Solution
         self.best_fit_queue: List[int] = [i for i in range(5)]
+        self.max_generations: int = max_generations
 
     def execute(self):
+        progress = tqdm(total=self.max_generations, desc='Applying genetic algorithm')
         # create first population
         self.create_random_population()
         # calculate new population's fitness
@@ -30,7 +33,7 @@ class Genetic(object):
         # sort from best to worst
         self.sort_population()
         self.best_fit = self.population[0]
-        self.write()
+        progress.write(self.write())
 
         while not self.constant_generations():
             # create new population
@@ -50,6 +53,7 @@ class Genetic(object):
 
             self.population = new_population
             self.generation += 1
+            progress.update(1)
             # calculate new population's fitness
             for solution in self.population:
                 solution.calculate_fitness()
@@ -60,7 +64,9 @@ class Genetic(object):
                 self.best_fit = self.population[0]
             # enqueue best solution in current population
             self.queue_best_fit()
-            self.write()
+            progress.write(self.write())
+
+        progress.close()
 
     def sort_population(self):
         self.population.sort(key=lambda solution: solution.fitness, reverse=True)
@@ -114,13 +120,13 @@ class Genetic(object):
         return solution
 
     def write(self):
-        print('Generation {} best fit: {}'.format(self.generation, self.best_fit.fitness))
+        return 'Generation {} best fit: {}'.format(self.generation, self.best_fit.fitness)
 
 from car import Car
 from ride import Ride
 # testing :) :-]
 if __name__ == "__main__":
-    dataset = Dataset('a_example')
+    dataset = Dataset('b_should_be_easy', from_scratch=True)
     gen = Genetic(dataset)
     gen.execute()
     """
