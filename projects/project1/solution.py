@@ -22,13 +22,13 @@ class Solution(object):
     def randomize_allocation(self):
         rides_per_car: int = len(self.unallocated_rides) // len(self.cars)
         # allocate random rides to cars
-        for car_index in range(self.cars - 1):
+        for car_index in range(len(self.cars) - 1):
             allocated_rides: List[Ride] = rd.sample(self.unallocated_rides, rides_per_car)
             self.cars[car_index].allocate_rides(allocated_rides)
             self.unallocated_rides = list(set(self.unallocated_rides) - set(allocated_rides))
         # last car is allocated the rest of unallocated rides
-        self.cars[len(self.cars)].allocate_rides(self.unallocated_rides)
-        self.unallocated_rides.clear()
+        self.cars[len(self.cars) - 1].allocate_rides(self.unallocated_rides)
+        self.unallocated_rides = []
 
     def matrix_allocation(self, binary_matrix: List[List[bool]]):
         for car, binary_list in zip(self.cars, binary_matrix):
@@ -38,10 +38,6 @@ class Solution(object):
         self.unallocated_rides = []
 
     def mutate(self):
-        """
-        TO DELETE
-        """
-
         possible_ride_placements: List[int] = list(range(len(self.cars) + 1))
 
         first_choice = possible_ride_placements.copy()
@@ -114,6 +110,11 @@ class Solution(object):
             ride_starting_index += 1
 
         return sol_list
+
+    def write(self):
+        print('Fitness: {}'.format(self.fitness))
+        for car_index in range(len(self.cars)):
+            self.cars[car_index].write(car_index)
 
 # testing :)
 if __name__ == "__main__":

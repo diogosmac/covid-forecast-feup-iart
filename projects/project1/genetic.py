@@ -6,8 +6,7 @@ import random as rd
 
 class Genetic(object):
 
-    def __init__(self, dataset: Dataset, max_population_size: int = 1000, polling_size: int = 200,
-                 mutation_rate: float = 0.01, constant_generations_num: int = 5):
+    def __init__(self, dataset: Dataset, max_population_size: int = 1000, polling_size: int = 200, mutation_rate: float = 0.01, constant_generations_num: int = 5):
         """
         """
         self.dataset = dataset
@@ -103,21 +102,17 @@ class Genetic(object):
     def write(self):
         print('Generation {} best fit: {}'.format(self.generation, self.best_fit.fitness))
 
-
-class Test(object):
-
-    def __init__(self, ident):
-        self.id = ident
-
-
+from car import Car
+from ride import Ride
 # testing :) :-]
 if __name__ == "__main__":
-    arr = [Test(1), Test(2), Test(3), Test(2)]
+    rides = [Ride(0, [0, 1, 2, 3, 3, 5]), Ride(1, [2, 1, 5, 6, 2, 5]), Ride(2, [5, 2, 6, 3, 1, 7])]
+    solution_1 = Solution([Car(2), Car(2), Car(2)], rides.copy())
+    solution_2 = Solution([Car(2), Car(2), Car(2)], rides.copy())
+    solution_1.randomize_allocation()
+    solution_1.calculate_fitness()
+    solution_2.randomize_allocation()
+    solution_2.calculate_fitness()
 
-    print([t.id for t in arr])
-
-    for t in arr:
-        if t.id == 2:
-            arr.remove(t)
-
-    print([t.id for t in arr])
+    solution_1.write()
+    solution_2.write()

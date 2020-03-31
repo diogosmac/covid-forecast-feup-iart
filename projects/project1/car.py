@@ -82,5 +82,10 @@ class Car(object):
 
         self.score = score
 
+    def write(self, num):
+        print('Car {}'.format(num))
+        for ride in self.allocated_rides:
+            ride.write()
+
     def mutate(self) -> int:
         return 0
