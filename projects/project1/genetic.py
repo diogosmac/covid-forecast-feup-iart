@@ -67,7 +67,9 @@ class Genetic(object):
 
     def create_random_population(self):
         while len(self.population) < self.max_population_size:
-            random_solution: Solution = Solution(self.dataset.nrides, self.dataset.rides.copy()).randomize_allocation()
+            cars: List[Car] = [Car(self.dataset.bonus) for _ in range(self.dataset.ncars)]
+            random_solution: Solution = Solution(cars, self.dataset.rides.copy())
+            random_solution.randomize_allocation()
             self.population.append(random_solution)
 
     def constant_generations(self):
@@ -85,7 +87,6 @@ class Genetic(object):
         child_b_matrix: List[List[bool]] = []
 
         crossover_index: int = rd.randint(1, self.dataset.nrides - 1)
-        print(crossover_index)
         for parent_a_car, parent_b_car in zip(parent_a_matrix, parent_b_matrix):
             child_a_matrix.append(parent_a_car[0:crossover_index] + parent_b_car[crossover_index:self.dataset.nrides])
             child_b_matrix.append(parent_b_car[0:crossover_index] + parent_a_car[crossover_index:self.dataset.nrides])
@@ -107,10 +108,10 @@ class Genetic(object):
         return matrix
 
     def matrix_to_solution(self, matrix: List[List[bool]]) -> Solution:
-        cars = [Car(self.dataset.bonus) for _ in range(self.dataset.ncars)]
-        sol = Solution(cars, self.dataset.rides.copy())
-        sol.matrix_allocation(matrix)
-        return sol
+        cars: List[Car] = [Car(self.dataset.bonus) for _ in range(self.dataset.ncars)]
+        solution: Solution = Solution(cars, self.dataset.rides.copy())
+        solution.matrix_allocation(matrix)
+        return solution
 
     def write(self):
         print('Generation {} best fit: {}'.format(self.generation, self.best_fit.fitness))
@@ -120,12 +121,14 @@ from ride import Ride
 # testing :) :-]
 if __name__ == "__main__":
     dataset = Dataset('a_example')
+    gen = Genetic(dataset)
+    gen.execute()
+    """
     rides = [Ride(0, [0, 1, 2, 3, 3, 5]), Ride(1, [2, 1, 5, 6, 2, 6]), Ride(2, [5, 2, 6, 3, 1, 7])]
     cars = [Car(2), Car(2), Car(2)]
     dataset.rides = rides
     dataset.ncars = 3
     
-    gen = Genetic(dataset)
     solution_1 = Solution([car.copy() for car in cars], rides.copy())
     # solution_2 = Solution([car.copy() for car in cars], rides.copy())
     
@@ -135,7 +138,6 @@ if __name__ == "__main__":
     solution_1.mutate()
     solution_1.write()
 
-    """
     solution_2.randomize_allocation()
     solution_2.calculate_fitness()
 
