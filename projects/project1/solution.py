@@ -41,78 +41,33 @@ class Solution(object):
         self.unallocated_rides = []
 
     def mutate(self):
-        possible_ride_placements: List[int] = list(range(len(self.cars) + 1))
+        possible_ride_positions: List[int] = list(range(len(self.cars)))
 
-        first_choice = possible_ride_placements.copy()
+        first_choice = possible_ride_positions.copy()
         take_from = None
         ride_orig = None
         while not take_from:
             ride_orig = rd.choice(first_choice)
             first_choice.remove(ride_orig)
 
-            if ride_orig == len(self.cars):
-                take_from = self.unallocated_rides
-            else:
-                take_from = self.cars[ride_orig].allocated_rides
+            take_from = self.cars[ride_orig]
 
-        second_choice = possible_ride_placements.copy()
+        second_choice = possible_ride_positions.copy()
         second_choice.remove(ride_orig)
-        ride_dest = rd.choice(first_choice)
-        if ride_dest == len(self.cars):
-            place_into = self.unallocated_rides
-        else:
-            place_into = self.cars[ride_orig].allocated_rides
+        ride_dest = rd.choice(second_choice)
+        place_into = self.cars[ride_dest]
 
-        ride = rd.choice(take_from)
-        take_from.remove(ride)
-        place_into.append(ride)
+        ride = rd.choice(take_from.allocated_rides)
+        take_from.remove_ride(ride.id)
+        place_into.allocate_ride(ride)
 
-        if ride_orig != len(self.cars): self.cars[ride_orig].calculate_score()
-        if ride_dest != len(self.cars): self.cars[ride_dest].calculate_score()
+        self.calculate_fitness()
 
     def write(self):
         for i, car in enumerate(self.cars):
             print('Car ' + str(i) + ': ' + ' '.join(['%d'] * len(car.allocated_rides))
                   % tuple([ride.id for ride in car.allocated_rides]))
 
-    # Progressively allocates rides
-    def get_neighbors(self):
-
-        sol_list = []
-        ride_starting_index = 0
-
-        while ride_starting_index < len(self.unallocated_rides):
-
-            ride_index = ride_starting_index
-
-            # generate a new solution
-            new_car_list = []
-            new_ride_list = self.unallocated_rides.copy()
-
-            for car_index in range(0, len(self.cars)):
-                current_car = self.cars[car_index].copy()
-                current_ride = self.unallocated_rides[ride_index]
-
-                if current_ride in new_ride_list:
-                    current_car.allocate_ride(current_ride)  # add the ride to the car
-                    new_ride_list.remove(current_ride)  # remove the ride from the list
-
-                new_car_list.append(current_car)  # add the car to the list
-
-                ride_index = (ride_index + 1) % (len(self.unallocated_rides))
-
-            # Add the solution
-            sol = Solution(new_car_list, new_ride_list)
-            sol_list.append(sol)
-
-            ride_starting_index += 1
-
-        return sol_list
-
-    def write(self):
-        print('Fitness: {}'.format(self.fitness))
-        for car_index in range(len(self.cars)):
-            self.cars[car_index].write(car_index)
 
 # testing :)
 if __name__ == "__main__":
