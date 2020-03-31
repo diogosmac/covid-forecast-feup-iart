@@ -1,8 +1,9 @@
-from car import Car
-from ride import Ride
-from solution import Solution
+import sys
+
+from src.car import Car
+from src.ride import Ride
+from src.solution import Solution
 from tqdm import tqdm
-import numpy as np
 
 
 class Dataset(object):
@@ -68,8 +69,7 @@ class Dataset(object):
                 if car.step > step:
                     continue
 
-                ride_priority = np.zeros(len(solution.unallocated_rides), int)
-                ride_priority[:] = np.iinfo(int).max
+                ride_priority = [sys.maxsize for _ in solution.unallocated_rides]
 
                 rides_available: bool = False
 
@@ -91,7 +91,13 @@ class Dataset(object):
                 if not rides_available:
                     continue
 
-                ride_id = np.argmin(ride_priority)
+                ride_id = None
+                priority = sys.maxsize
+                for ri, rp in enumerate(ride_priority):
+                    if rp < priority:
+                        ride_id = ri
+                        priority = rp
+
                 ride = solution.unallocated_rides[int(ride_id)]
 
                 distance_to_car = manhattan_distance(car.position, ride.orig)

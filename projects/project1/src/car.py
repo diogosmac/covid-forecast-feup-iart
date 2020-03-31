@@ -1,22 +1,61 @@
-from ride import Ride
+from src.ride import Ride
 from typing import List
 
 
 class Car(object):
+    """
+    A class that keeps all information relative to a ride
+
+    ...
+
+    Attributes
+    ----------
+    position : List[int]
+        stores the position of the car, during the calculations of the greedy solution and of the car's score
+    step : int
+        stores the current step of the car, during the calculations of the greedy solution and of the car's score
+    bonus : int
+        the bonus applied to all rides that start as early as possible, related to the dataset
+    allocated_rides : List[Ride]
+        the list of rides allocated to the car, in the order that they will be done
+    score : int
+        the score associated to a car, to prevent the global recalculation of the score for each new solution
+
+    Methods
+    -------
+    copy()
+        generates a different Ride object, with the same characteristics as the one for which it is called
+    allocate_ride()
+        allocates a ride to the car, and updates the car's score
+    allocate_rides()
+        sets a car's allocated rides list to the argument passed
+    remove_ride()
+        removes a ride from the car, and updates the car's score
+    has_ride()
+        checks whether a given ride is allocated to the car
+    sort_rides()
+        uses heuristics to define the order in which the rides will be done
+    move_to_ride_orig()
+        moves the car to the starting point of a ride
+    move_to_ride_dest()
+        moves the car to the finish point of a ride
+    calculate_score()
+        calculates the car's score, based on the allocated rides and their order
+    write()
+        prints the ride's information to the console
+    """
 
     def __init__(self, bonus: int):
         """
-        A car is composed of:
-            A position on the map;
-            A current step;
-            A list of allocated rides (Object).
+        Parameters
+        ----------
+        bonus : int
+            the bonus score associated to all rides that start as early as possible
         """
         self.position = [0, 0]
         self.step = 0
         self.bonus = bonus
-
         self.allocated_rides: List[Ride] = []
-
         self.score = 0
 
     def copy(self):
@@ -32,6 +71,10 @@ class Car(object):
         self.allocated_rides.append(ride)
         self.sort_rides()
         self.calculate_score()
+
+    def allocate_rides(self, rides: List[Ride]):
+        self.allocated_rides = rides
+        self.sort_rides()
 
     def remove_ride(self, ride_index: int):
         for ride in self.allocated_rides:
@@ -79,5 +122,8 @@ class Car(object):
 
         self.score = score
 
-    def mutate(self) -> int:
-        return 0
+    def write(self, num):
+        print('Car {}'.format(num))
+        for ride in self.allocated_rides:
+            ride.write()
+
