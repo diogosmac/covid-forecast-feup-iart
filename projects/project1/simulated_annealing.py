@@ -90,15 +90,19 @@ class SimulatedAnnealing(HillClimbing):
                 if not improved:
                     break
             # Displays the current score after an iteration
-            progress.set_postfix_str('Current Score: {}'.format(self.solution.fitness))
+            progress.set_postfix_str('Current Score = {}, Time Elapsed = {:.2f} seconds'.format(
+                self.solution.fitness, tm.time() - start
+            ))
 
         # Records the elapsed time, for statistical purposes
         elapsed = tm.time() - start
         progress.update(self.iteration_limit - iteration)
-        progress.write('\nFinal Score: {}'.format(self.solution.fitness))
-        progress.write('Gain in Score: {}'.format(self.solution.fitness - initial_score))
-        progress.write('Time elapsed: {} seconds'.format(elapsed))
+        progress.set_postfix_str('Final Score = {}, Time Elapsed = {:.2f} seconds'.format(
+            self.solution.fitness, tm.time() - start
+        ))
         progress.close()
+        print('Final Score: {}, Gain in Score: {}, Time Elapsed = {:.2f} seconds'.format(
+            self.solution.fitness, self.solution.fitness - initial_score, elapsed))
 
 
     def cool_down(self, temperature: float) -> bool:
