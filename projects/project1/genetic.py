@@ -7,23 +7,92 @@ from car import Car
 import random as rd
 
 class Genetic(object):
+    """
+    A class used to perform a genetic algorithm given a dataset and
+    regular algorithm related attributes
+
+    ...
+
+    Attributes
+    ----------
+    dataset : Dataset
+        a Dataset instance containing information about the problem
+    generation : int
+        the current generation number
+    population : List[Solution]
+        a list containing the population, i.e list of chromosomes
+    max_population_size : int
+        the max number of chromosomes (population size) in each generation
+    polling_size : int
+        the number of chromosomes in a population that will be used to reproduce
+    mutation_rate : float
+        the chance of a chromosome being mutated
+    constant_generations_num: int
+        the number of in a row generations of constant best fit chromosome
+        when this happens execution stops
+    max_generations: int
+        the number of max generations before the algorithm stops
+    best_fit : Solution
+        the current generation's best chromosome
+    best_fit_queue : List[Solution]
+        a list containing the last best chromosomes
+
+    Methods
+    -------
+    execute()
+        executes the algorithm
+    sort_population()
+        sorts chromosomes in population from best fit to worst fit
+    create_random_population()
+        creates random population with size equal to max_population_size
+    constant_generations() -> bool
+        returns true if the last generations had no improvement in the last best_fit
+    queue_best_fit()
+        places the current's generation best fit in the best_fit queue
+    reproduce(parent_a : Solution, parent_b : Solution) -> List[Solution]
+        returns two chromosomes which were the result of crossing over parent_a and parent_b
+    solution_to_matrix(solution : Solution) -> List[Solution]
+        transforms the chromosome in a two-dimensional binary list representation
+    matix_to_solution(matrix: List[List[bool]]) -> Solution
+        transforms a two-dimensional binary list into a chromosome
+    write() -> str
+        returns a string containing the information about the current generation
+    """
 
     def __init__(self, dataset: Dataset, max_population_size: int = 1000, polling_size: int = 100, mutation_rate: float = 0.01, constant_generations_num: int = 10, max_generations: int = 200):
         """
+        Parameters
+        ----------
+        dataset : Dataset
+            a Dataset instance containing information about the problem
+        max_population_size : int
+            the number of chromosomes (population) in each generation
+        polling_size : int
+            the number of chromosomes in a population that will be used to reproduce
+        mutation_rate : float
+            the chance of a chromosome being mutated
+        constant_generations_num: int
+            the number of in a row generations of constant best fit chromosome
+            when this happens execution stops
+        max_generations: int
+            the number of max generations before the algorithm stops
         """
         self.dataset = dataset
-
         self.generation: int = 1
         self.population: List[Solution] = []
         self.max_population_size: int = max_population_size
         self.polling_size: int = polling_size
         self.mutation_rate: float = mutation_rate
         self.constant_generations_num: int = constant_generations_num
-        self.best_fit: Solution
-        self.best_fit_queue: List[int] = [i for i in range(5)]
         self.max_generations: int = max_generations
 
+        self.best_fit: Solution
+        self.best_fit_queue: List[int] = [i for i in range(5)]
+
     def execute(self):
+        """
+        executes the algorithm
+        """
         progress = tqdm(total=self.max_generations, desc='Applying genetic algorithm')
         # create first population
         self.create_random_population()
@@ -69,24 +138,39 @@ class Genetic(object):
         progress.close()
 
     def sort_population(self):
+        """
+        sorts chromosomes in population from best fit to worst fit
+        """
         self.population.sort(key=lambda solution: solution.fitness, reverse=True)
 
     def create_random_population(self):
+        """
+        creates random population with size equal to max_population_size
+        """
         while len(self.population) < self.max_population_size:
             cars: List[Car] = [Car(self.dataset.bonus) for _ in range(self.dataset.ncars)]
             random_solution: Solution = Solution(cars, self.dataset.rides.copy())
             random_solution.randomize_allocation()
             self.population.append(random_solution)
 
-    def constant_generations(self):
+    def constant_generations(self) -> bool:
+        """
+        returns true if the last generations had no improvement in the last best_fit
+        """
         return len(set(self.best_fit_queue)) == 1
 
     def queue_best_fit(self):
+        """
+        places the current's generation best fit in the best_fit queue
+        """
         if len(self.best_fit_queue) == self.constant_generations_num:
             self.best_fit_queue.pop(0)
         self.best_fit_queue.append(self.best_fit)
 
     def reproduce(self, parent_a: Solution, parent_b: Solution) -> List[Solution]:
+        """
+        returns two chromosomes which were the result of crossing over parent_a and parent_b
+        """
         parent_a_matrix = self.solution_to_matrix(parent_a)
         parent_b_matrix = self.solution_to_matrix(parent_b)
         child_a_matrix: List[List[bool]] = []
@@ -105,6 +189,9 @@ class Genetic(object):
         return [child_a, child_b]
 
     def solution_to_matrix(self, solution: Solution) -> List[List[bool]]:
+        """
+        transforms a two-dimensional binary list into a chromosome
+        """
         matrix: List[List[bool]] = []
         for car in solution.cars:
             binary_list: List[bool] = [False] * self.dataset.nrides
@@ -114,42 +201,16 @@ class Genetic(object):
         return matrix
 
     def matrix_to_solution(self, matrix: List[List[bool]]) -> Solution:
+        """
+        transforms a two-dimensional binary list into a chromosome
+        """
         cars: List[Car] = [Car(self.dataset.bonus) for _ in range(self.dataset.ncars)]
         solution: Solution = Solution(cars, self.dataset.rides.copy())
         solution.matrix_allocation(matrix)
         return solution
 
-    def write(self):
+    def write(self) -> str:
+        """
+        returns a string containing the information about the current generation
+        """
         return 'Generation {} best fit: {}'.format(self.generation, self.best_fit.fitness)
-
-from car import Car
-from ride import Ride
-# testing :) :-]
-if __name__ == "__main__":
-    dataset = Dataset('b_should_be_easy', from_scratch=True)
-    gen = Genetic(dataset)
-    gen.execute()
-    """
-    rides = [Ride(0, [0, 1, 2, 3, 3, 5]), Ride(1, [2, 1, 5, 6, 2, 6]), Ride(2, [5, 2, 6, 3, 1, 7])]
-    cars = [Car(2), Car(2), Car(2)]
-    dataset.rides = rides
-    dataset.ncars = 3
-    
-    solution_1 = Solution([car.copy() for car in cars], rides.copy())
-    # solution_2 = Solution([car.copy() for car in cars], rides.copy())
-    
-    solution_1.randomize_allocation()
-    solution_1.calculate_fitness()
-    solution_1.write()
-    solution_1.mutate()
-    solution_1.write()
-
-    solution_2.randomize_allocation()
-    solution_2.calculate_fitness()
-
-    solution_2.write()
-
-    children = gen.reproduce(solution_1, solution_2)
-    children[0].write()
-    children[1].write()
-    """
