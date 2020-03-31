@@ -57,9 +57,11 @@ class Genetic(object):
         transforms a two-dimensional binary list into a chromosome
     write() -> str
         returns a string containing the information about the current generation
+    write_configuration() -> str
+        returns a string containing information about algorithm options
     """
 
-    def __init__(self, dataset: Dataset, max_population_size: int = 1000, polling_size: int = 100, mutation_rate: float = 0.01, constant_generations_num: int = 10, max_generations: int = 200):
+    def __init__(self, dataset: Dataset, max_population_size: int = 500, polling_size: int = 50, mutation_rate: float = 0.01, constant_generations_num: int = 10, max_generations: int = 200):
         """
         Parameters
         ----------
@@ -104,9 +106,11 @@ class Genetic(object):
         self.best_fit = self.population[0]
         progress.write(self.write())
 
+        progress_new_population = tqdm(total=self.max_population_size, desc='Creating new population')
         while not self.constant_generations():
             # create new population
             new_population: List[Solution] = []
+            progress_new_population.reset()
             while len(new_population) < self.max_population_size:
                 # choose the best n (polling size) of population
                 parent_a = self.population[rd.randint(0, self.polling_size - 1)]
@@ -119,6 +123,8 @@ class Genetic(object):
                     children[1].mutate()
                 new_population.append(children[0])
                 new_population.append(children[1])
+                # update population progress bar
+                progress_new_population.update(2)
 
             self.population = new_population
             self.generation += 1
@@ -135,6 +141,7 @@ class Genetic(object):
             self.queue_best_fit()
             progress.write(self.write())
 
+        progress.update(self.max_generations)
         progress.close()
 
     def sort_population(self):
@@ -147,11 +154,15 @@ class Genetic(object):
         """
         creates random population with size equal to max_population_size
         """
+        progress = tqdm(total=self.max_population_size, desc='Creating first random population')
         while len(self.population) < self.max_population_size:
             cars: List[Car] = [Car(self.dataset.bonus) for _ in range(self.dataset.ncars)]
             random_solution: Solution = Solution(cars, self.dataset.rides.copy())
             random_solution.randomize_allocation()
             self.population.append(random_solution)
+            progress.update(1)
+        progress.close()
+        progress.clear()
 
     def constant_generations(self) -> bool:
         """
@@ -211,6 +222,12 @@ class Genetic(object):
 
     def write(self) -> str:
         """
-        returns a string containing the information about the current generation
+        returns a string containing information about the current generation
         """
         return 'Generation {} best fit: {}'.format(self.generation, self.best_fit.fitness)
+
+    def write_configuration(self) -> str:
+        """
+        returns a string containing information about algorithm options
+        """
+        return 'Max Generations: {}\nMax Population Size: {}\nPolling Size: {}\nMutation Chance: {}\nConstant Generation Size: {}'.format(self.max_generations, self.max_population_size, self.polling_size, self.mutation_rate, self.constant_generations_num)
