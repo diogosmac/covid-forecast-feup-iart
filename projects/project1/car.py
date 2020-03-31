@@ -35,6 +35,7 @@ class Car(object):
 
     def allocate_rides(self, rides: List[Ride]):
         self.allocated_rides = rides
+        self.sort_rides()
 
     def remove_ride(self, ride_index: int):
         for ride in self.allocated_rides:
