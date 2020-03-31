@@ -67,28 +67,3 @@ class Solution(object):
         for i, car in enumerate(self.cars):
             print('Car ' + str(i) + ': ' + ' '.join(['%d'] * len(car.allocated_rides))
                   % tuple([ride.id for ride in car.allocated_rides]))
-
-
-# testing :)
-if __name__ == "__main__":
-    car1: Car = Car()
-    car1.allocate_ride(Ride(0, [0, 1, 2, 3, 4, 5]))
-    car1.allocate_ride(Ride(1, [0, 1, 2, 3, 4, 5]))
-    car1.allocate_ride(Ride(2, [0, 1, 2, 3, 4, 5]))
-
-    car2: Car = Car()
-    car2.allocate_ride(Ride(3, [0, 1, 2, 3, 4, 5]))
-    car2.allocate_ride(Ride(4, [0, 1, 2, 3, 4, 5]))
-    car2.allocate_ride(Ride(5, [0, 1, 2, 3, 4, 5]))
-
-    list_1 = [car1, car2]
-    list_2 = list_1.copy()
-
-    list_2.pop(0)
-
-    for car in list_1:
-        print(car.allocated_rides)
-
-    print()
-    for car in list_2:
-        print(car.allocated_rides)
