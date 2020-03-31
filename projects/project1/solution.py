@@ -54,16 +54,11 @@ class Solution(object):
 
         second_choice = possible_ride_placements.copy()
         second_choice.remove(ride_orig)
-        place_into = None
-        ride_dest = None
-        while not place_into:
-            ride_dest = rd.choice(first_choice)
-            second_choice.remove(ride_dest)
-
-            if ride_dest == len(self.cars):
-                place_into = self.unallocated_rides
-            else:
-                place_into = self.cars[ride_orig].allocated_rides
+        ride_dest = rd.choice(first_choice)
+        if ride_dest == len(self.cars):
+            place_into = self.unallocated_rides
+        else:
+            place_into = self.cars[ride_orig].allocated_rides
 
         ride = rd.choice(take_from)
         take_from.remove(ride)
