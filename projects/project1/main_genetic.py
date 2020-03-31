@@ -3,6 +3,7 @@ import sys
 from dataset import Dataset
 from genetic import Genetic
 
+
 def main():
     if len(sys.argv) < 2:
         print('Usage:\tpython ' + sys.argv[0] + ' <input file>\n')
@@ -23,6 +24,7 @@ def main():
     genetic_1.execute()
 
     return 0
+
 
 if __name__ == '__main__':
     main()

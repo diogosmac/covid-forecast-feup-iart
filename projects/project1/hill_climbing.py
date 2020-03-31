@@ -62,7 +62,7 @@ class HillClimbing(object):
         iteration = 0
         progress = tqdm(total=self.iteration_limit, desc='Climbing the Hill')
         # Time will be recorded for statistical purposes
-        start = time = tm.time()
+        start = tm.time()
         # Executes until it reaches the limit of iterations (or until it reaches an end condition)
         while iteration < self.iteration_limit:
             advance = self.climb_hill()

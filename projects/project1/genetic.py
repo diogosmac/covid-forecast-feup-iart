@@ -35,8 +35,8 @@ class Genetic(object):
         the number of max generations before the algorithm stops
     best_fit : Solution
         the current generation's best chromosome
-    best_fit_queue : List[Solution]
-        a list containing the last best chromosomes
+    best_fit_queue : List[int]
+        a list containing the fitness of the last best chromosomes
 
     Methods
     -------
@@ -62,7 +62,8 @@ class Genetic(object):
         returns a string containing information about algorithm options
     """
 
-    def __init__(self, dataset: Dataset, max_population_size: int = 500, polling_size: int = 50, mutation_rate: float = 0.01, constant_generations_num: int = 10, max_generations: int = 200):
+    def __init__(self, dataset: Dataset, max_population_size: int = 500, polling_size: int = 50,
+                 mutation_rate: float = 0.01, constant_generations_num: int = 10, max_generations: int = 200):
         """
         Parameters
         ----------
@@ -97,6 +98,7 @@ class Genetic(object):
         executes the algorithm
         """
         progress = tqdm(total=self.max_generations, desc='Applying genetic algorithm')
+        start = tm.time()
         # create first population
         self.create_random_population()
         # calculate new population's fitness
@@ -106,7 +108,6 @@ class Genetic(object):
         self.sort_population()
         self.best_fit = self.population[0]
         initial_best = self.best_fit.fitness
-        start = time = tm.time()
         progress.write(self.write())
 
         progress_new_population = tqdm(total=self.max_population_size, desc='Creating new population')
@@ -114,6 +115,7 @@ class Genetic(object):
             # create new population
             new_population: List[Solution] = []
             progress_new_population.reset()
+            pop_start = tm.time()
             while len(new_population) < self.max_population_size:
                 # choose the best n (polling size) of population
                 parent_a = self.population[rd.randint(0, self.polling_size - 1)]
@@ -128,6 +130,14 @@ class Genetic(object):
                 new_population.append(children[1])
                 # update population progress bar
                 progress_new_population.update(2)
+                # updates time elapsed
+                progress_new_population.set_postfix_str(
+                    'Generated Chromosomes = {}, Time Elapsed = {:.2f} seconds'.format(
+                        len(new_population), tm.time() - pop_start))
+                progress.set_postfix_str(
+                    'Current Score = {}, New Generation Count = {}, Time Elapsed = {:.2f} seconds'.format(
+                        self.best_fit.fitness, self.generation - 1, tm.time() - start
+                    ))
 
             self.population = new_population
             self.generation += 1
@@ -143,9 +153,17 @@ class Genetic(object):
             # enqueue best solution in current population
             self.queue_best_fit()
             progress.write(self.write())
+            # Displays the current score after an iteration
+            progress.set_postfix_str(
+                'Current Score = {}, Generation Count = {}, Time Elapsed = {:.2f} seconds'.format(
+                    self.best_fit.fitness, self.generation, tm.time() - start
+                ))
 
         elapsed = tm.time() - start
         progress.update(self.max_population_size)
+        progress.set_postfix_str('Current Score = {}, Time Elapsed = {:.2f} seconds'.format(
+            self.best_fit, tm.time() - start
+        ))
         progress.write('\n')
         progress.write('Initial Score: {}'.format(initial_best))
         progress.write('Final Score: {}'.format(self.best_fit.fitness))
@@ -163,6 +181,7 @@ class Genetic(object):
         """
         creates random population with size equal to max_population_size
         """
+        start = tm.time()
         progress = tqdm(total=self.max_population_size, desc='Creating first random population')
         while len(self.population) < self.max_population_size:
             cars: List[Car] = [Car(self.dataset.bonus) for _ in range(self.dataset.ncars)]
@@ -170,6 +189,9 @@ class Genetic(object):
             random_solution.randomize_allocation()
             self.population.append(random_solution)
             progress.update(1)
+            progress.set_postfix_str(
+                'Generated Chromosomes = {}, Time Elapsed = {:.2f} seconds'.format(
+                    len(self.population), tm.time() - start))
         progress.close()
         progress.clear()
 
@@ -239,4 +261,6 @@ class Genetic(object):
         """
         returns a string containing information about algorithm options
         """
-        return 'Max Generations: {}\nMax Population Size: {}\nPolling Size: {}\nMutation Chance: {}\nConstant Generation Size: {}'.format(self.max_generations, self.max_population_size, self.polling_size, self.mutation_rate, self.constant_generations_num)
+        return 'Max Generations: {}\nMax Population Size: {}\nPolling Size: {}\nMutation Chance: {}\nConstant Generation Size: {}'.format(
+            self.max_generations, self.max_population_size, self.polling_size, self.mutation_rate,
+            self.constant_generations_num)
