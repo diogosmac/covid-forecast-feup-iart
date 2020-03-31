@@ -1,5 +1,6 @@
 import math
 import random as rd
+import time as tm
 
 from dataset import Dataset
 from hill_climbing import HillClimbing
@@ -19,12 +20,13 @@ class SimulatedAnnealing(HillClimbing):
     def solve(self):
 
         self.solution.calculate_fitness()
-        print('Current Score:', self.solution.fitness)
+        print('Current Score: {}'.format(self.solution.fitness))
 
         iteration = 0
         temperature = self.start_temperature
         progress = tqdm(total=self.iteration_limit, desc='Climbing the Hill')
 
+        start = time = tm.time()
         while iteration < self.iteration_limit:
             self.cool_down(temperature)
             iteration += 1
@@ -33,11 +35,16 @@ class SimulatedAnnealing(HillClimbing):
             if temperature < self.limit_temp:
                 break
 
+            if tm.time() - time > 2:
+                progress.write('Current Score: {}'.format(self.solution.fitness))
+                time = tm.time()
+
+        elapsed = tm.time() - start
         progress.update(self.iteration_limit - iteration)
+        progress.write('Final Score: {}'.format(self.solution.fitness))
+        progress.write('Time elapsed: {} seconds'.format(elapsed))
         progress.close()
 
-        self.solution.calculate_fitness()
-        print('Final Score:', self.solution.fitness)
 
     def cool_down(self, temperature: float):
 

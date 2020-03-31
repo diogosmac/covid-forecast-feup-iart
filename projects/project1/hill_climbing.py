@@ -3,6 +3,7 @@ from ride import Ride
 from typing import List
 from tqdm import tqdm
 import random as rd
+import time as tm
 
 
 class HillClimbing(object):
@@ -19,24 +20,29 @@ class HillClimbing(object):
     def solve(self):
 
         self.solution.calculate_fitness()
-        print('Current Score:', self.solution.fitness)
+        print('Initial Score: {}'.format(self.solution.fitness))
 
         iteration = 0
         progress = tqdm(total=self.iteration_limit, desc='Climbing the Hill')
 
+        start = time = tm.time()
         while iteration < self.iteration_limit:
             advance = self.climb_hill()
             if not advance:
                 break
 
+            if tm.time() - time > 2:
+                progress.write('Current Score: {}'.format(self.solution.fitness))
+                time = tm.time()
+
             iteration += 1
             progress.update(1)
 
+        elapsed = tm.time() - start
         progress.update(self.iteration_limit - iteration)
+        progress.write('Final Score: {}'.format(self.solution.fitness))
+        progress.write('Time elapsed: {} seconds'.format(elapsed))
         progress.close()
-
-        self.solution.calculate_fitness()
-        print('Final Score:', self.solution.fitness)
 
     def climb_hill(self) -> bool:
 
