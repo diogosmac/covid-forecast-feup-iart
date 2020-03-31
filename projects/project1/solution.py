@@ -25,9 +25,11 @@ class Solution(object):
         for car_index in range(len(self.cars) - 1):
             allocated_rides: List[Ride] = rd.sample(self.unallocated_rides, rides_per_car)
             self.cars[car_index].allocate_rides(allocated_rides)
+            self.cars[car_index].calculate_score()
             self.unallocated_rides = list(set(self.unallocated_rides) - set(allocated_rides))
         # last car is allocated the rest of unallocated rides
         self.cars[len(self.cars) - 1].allocate_rides(self.unallocated_rides)
+        self.cars[len(self.cars) - 1].calculate_score()
         self.unallocated_rides = []
 
     def matrix_allocation(self, binary_matrix: List[List[bool]]):
@@ -35,6 +37,7 @@ class Solution(object):
             # get indexes of True elements in binary list
             allocated_rides: List[Ride] = [self.unallocated_rides[ride_index] for ride_index, val in enumerate(binary_list) if val]
             car.allocate_rides(allocated_rides)
+            car.calculate_score()
         self.unallocated_rides = []
 
     def mutate(self):
