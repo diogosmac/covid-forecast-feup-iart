@@ -47,6 +47,8 @@ class Solution(object):
         take_from = None
         ride_orig = None
         while not take_from:
+            if not first_choice:
+                return
             ride_orig = rd.choice(first_choice)
             first_choice.remove(ride_orig)
 
