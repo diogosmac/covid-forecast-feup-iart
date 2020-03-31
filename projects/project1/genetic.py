@@ -1,10 +1,10 @@
-import random as rd
-
 from typing import List
 from dataset import Dataset
 from solution import Solution
 from tqdm import tqdm
 from car import Car
+import time as tm
+import random as rd
 
 
 class Genetic(object):
@@ -105,6 +105,8 @@ class Genetic(object):
         # sort from best to worst
         self.sort_population()
         self.best_fit = self.population[0]
+        initial_best = self.best_fit.fitness
+        start = time = tm.time()
         progress.write(self.write())
 
         progress_new_population = tqdm(total=self.max_population_size, desc='Creating new population')
@@ -142,7 +144,13 @@ class Genetic(object):
             self.queue_best_fit()
             progress.write(self.write())
 
-        progress.update(self.max_generations)
+        elapsed = tm.time() - start
+        progress.update(self.max_population_size)
+        progress.write('\n')
+        progress.write('Initial Score: {}'.format(initial_best))
+        progress.write('Final Score: {}'.format(self.best_fit.fitness))
+        progress.write('Gain in Score: {}'.format(self.best_fit.fitness - initial_best))
+        progress.write('Time elapsed: {} seconds'.format(elapsed))
         progress.close()
 
     def sort_population(self):
