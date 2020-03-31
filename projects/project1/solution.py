@@ -46,7 +46,7 @@ class Solution(object):
         first_choice = possible_ride_positions.copy()
         take_from = None
         ride_orig = None
-        while not take_from:
+        while not take_from.allocated_rides:
             if not first_choice:
                 return
             ride_orig = rd.choice(first_choice)
