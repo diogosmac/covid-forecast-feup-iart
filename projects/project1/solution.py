@@ -44,24 +44,23 @@ class Solution(object):
         possible_ride_positions: List[int] = list(range(len(self.cars)))
 
         first_choice = possible_ride_positions.copy()
-        take_from = None
         ride_orig = None
-        while not take_from.allocated_rides:
+        take_from = None
+        while not take_from:
             if not first_choice:
                 return
             ride_orig = rd.choice(first_choice)
             first_choice.remove(ride_orig)
 
-            take_from = self.cars[ride_orig]
+            take_from = self.cars[ride_orig].allocated_rides
 
         second_choice = possible_ride_positions.copy()
         second_choice.remove(ride_orig)
         ride_dest = rd.choice(second_choice)
-        place_into = self.cars[ride_dest]
 
-        ride = rd.choice(take_from.allocated_rides)
-        take_from.remove_ride(ride.id)
-        place_into.allocate_ride(ride)
+        ride = rd.choice(self.cars[ride_orig].allocated_rides)
+        self.cars[ride_orig].remove_ride(ride.id)
+        self.cars[ride_dest].allocate_ride(ride)
 
         self.calculate_fitness()
 
