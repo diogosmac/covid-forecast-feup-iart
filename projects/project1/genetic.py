@@ -6,10 +6,11 @@ import random as rd
 
 class Genetic(object):
 
-    def __init__(self, dataset: Dataset, max_population_size: int = 1000, polling_size: int = 200, mutation_rate: float = 0.01, constant_generations_num: int = 5):
+    def __init__(self, dataset: Dataset, max_population_size: int = 1000, polling_size: int = 200,
+                 mutation_rate: float = 0.01, constant_generations_num: int = 5):
         """
         """
-        self.dataset = Dataset
+        self.dataset = dataset
 
         self.generation: int = 1
         self.population: List[Solution] = []

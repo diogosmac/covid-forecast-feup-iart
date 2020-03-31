@@ -41,8 +41,40 @@ class Solution(object):
         """
         TO DELETE
         """
-        #rd.choice(self.cars).mutate()
-        return
+
+        possible_ride_placements: List[int] = list(range(len(self.cars) + 1))
+
+        first_choice = possible_ride_placements.copy()
+        take_from = None
+        ride_orig = None
+        while not take_from:
+            ride_orig = rd.choice(first_choice)
+            first_choice.remove(ride_orig)
+
+            if ride_orig == len(self.cars):
+                take_from = self.unallocated_rides
+            else:
+                take_from = self.cars[ride_orig].allocated_rides
+
+        second_choice = possible_ride_placements.copy()
+        second_choice.remove(ride_orig)
+        place_into = None
+        ride_dest = None
+        while not place_into:
+            ride_dest = rd.choice(first_choice)
+            second_choice.remove(ride_dest)
+
+            if ride_dest == len(self.cars):
+                place_into = self.unallocated_rides
+            else:
+                place_into = self.cars[ride_orig].allocated_rides
+
+        ride = rd.choice(take_from)
+        take_from.remove(ride)
+        place_into.append(ride)
+
+        if ride_orig != len(self.cars): self.cars[ride_orig].calculate_score()
+        if ride_dest != len(self.cars): self.cars[ride_dest].calculate_score()
 
     def write(self):
         for i, car in enumerate(self.cars):
