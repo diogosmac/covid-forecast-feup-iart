@@ -162,7 +162,7 @@ class Genetic(object):
         elapsed = tm.time() - start
         progress.update(self.max_population_size)
         progress.set_postfix_str('Current Score = {}, Time Elapsed = {:.2f} seconds'.format(
-            self.best_fit, tm.time() - start
+            self.best_fit.fitness, tm.time() - start
         ))
         progress.write('\n')
         progress.write('Initial Score: {}'.format(initial_best))
