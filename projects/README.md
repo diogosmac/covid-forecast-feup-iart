@@ -5,20 +5,20 @@
 ### Project 1
 
  - [X] **28 Fev** Project 1 Topic Choice
- - [ ] **13 Mar** Project 1 Checkpoint
- - [ ] **27 Mar** Project 1 Delivery
- - [ ] **3 Abr** Project 1 Presentation
+ - [X] **13 Mar** Project 1 Checkpoint
+ - [X] **31 Mar** Project 1 Delivery
+ - [X] **3 Abr** Project 1 Presentation
 
-## Project 2
+### Project 2
 
  - [ ] **17 Abr** Project 2 Topic Choice
  - [ ] **1 Mai** Project 2 Checkpoint
  - [ ] **19 Mai** Project 2 Delivery
  - [ ] **29 Mai** Project 2 Presentation
 
-## Tests
+### Tests
 
- - [ ] **1 Abr** Minitest 1
+ - [X] **1 Abr** Minitest 1
  - [ ] **15 Jun** Minitest 2
  - [ ] **1-3 Jul** Final Exam
 
