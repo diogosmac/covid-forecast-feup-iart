@@ -37,7 +37,7 @@ class Ride(object):
         output = 'ride ' + str(self.id) + ': '
         output += 'from ' + str(self.orig)
         output += ' to ' + str(self.dest) + ', '
-        output += ' total distance ' + str(self.dest) + ', '
+        output += ' total distance ' + str(self.distance) + ', '
         output += 'earliest start ' + str(self.earliest_start) + ', '
         output += 'latest finish ' + str(self.latest_finish)
         print(output)

@@ -40,8 +40,11 @@ class Genetic(object):
                 parent_a = self.population[rd.randint(0, self.polling_size - 1)]
                 parent_b = self.population[rd.randint(0, self.polling_size - 1)]
                 children = self.reproduce(parent_a, parent_b)
-                children[0].mutate()
-                children[1].mutate()
+                # slight chance of mutation
+                if rd.random() < self.mutation_rate:
+                    children[0].mutate()
+                if rd.random() < self.mutation_rate:
+                    children[1].mutate()
                 new_population.append(children[0])
                 new_population.append(children[1])
 
@@ -112,7 +115,6 @@ class Genetic(object):
     def write(self):
         print('Generation {} best fit: {}'.format(self.generation, self.best_fit.fitness))
 
-"""
 from car import Car
 from ride import Ride
 # testing :) :-]
@@ -125,18 +127,21 @@ if __name__ == "__main__":
     
     gen = Genetic(dataset)
     solution_1 = Solution([car.copy() for car in cars], rides.copy())
-    solution_2 = Solution([car.copy() for car in cars], rides.copy())
+    # solution_2 = Solution([car.copy() for car in cars], rides.copy())
     
     solution_1.randomize_allocation()
     solution_1.calculate_fitness()
+    solution_1.write()
+    solution_1.mutate()
+    solution_1.write()
+
+    """
     solution_2.randomize_allocation()
     solution_2.calculate_fitness()
 
-    solution_1.write()
     solution_2.write()
 
     children = gen.reproduce(solution_1, solution_2)
     children[0].write()
     children[1].write()
-
-"""
+    """
