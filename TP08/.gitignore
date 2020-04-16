@@ -1,0 +1,18 @@
+# pycache
+__pycache__/
+
+# Jupyter Lab
+.ipynb_checkpoints/
+
+# virtual environment
+env/
+.Python
+[Bb]in
+[Ii]nclude
+[Ll]ib
+[Ll]ib64
+[Ll]ocal
+[Ss]cripts
+pyvenv.cfg
+.venv
+pip-selfcheck.json
