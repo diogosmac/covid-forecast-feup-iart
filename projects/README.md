@@ -54,4 +54,5 @@ Problem statement for the Online Qualification Round of Hash Code 2018
 
  - [4 Types of Classification](https://machinelearningmastery.com/types-of-classification-in-machine-learning/)
  - [Imbalanced Classification](https://machinelearningmastery.com/imbalanced-classification-with-the-fraudulent-credit-card-transactions-dataset/)
+  - [Pattern Classification For COVID-19 Growth Data](https://towardsdatascience.com/classify-growth-patterns-for-covid-19-data-41af4c7adc55)
 
