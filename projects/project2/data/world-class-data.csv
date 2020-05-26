@@ -1,31 +1,30 @@
 Country,Cluster
-Spain,9
-France,9
-Ecuador,9
-Switzerland,9
-Israel,9
-Austria,9
-Norway,9
-Australia,9
-Ghana,9
-China,8
-South Korea,8
-US,7
-United Kingdom,7
-Turkey,7
-Iran,7
-Canada,7
-Sweden,7
-Poland,7
-Ukraine,7
-Romania,7
-Dominican Republic,7
-Philippines,7
-Panama,7
-Algeria,7
-Morocco,7
-Moldova,7
-Finland,7
+US,9
+United Kingdom,9
+Turkey,9
+Iran,9
+Canada,9
+Sweden,9
+Poland,9
+Ukraine,9
+Romania,9
+Dominican Republic,9
+Philippines,9
+Panama,9
+Algeria,9
+Morocco,9
+Moldova,9
+Finland,9
+France,8
+Switzerland,8
+Austria,8
+Norway,8
+Australia,8
+China,7
+Ecuador,7
+South Korea,7
+Ghana,7
+Spain,6
 Italy,6
 Germany,6
 Belgium,6
@@ -33,6 +32,7 @@ Netherlands,6
 Portugal,6
 Ireland,6
 Japan,6
+Israel,6
 Denmark,6
 Serbia,6
 Czechia,6
