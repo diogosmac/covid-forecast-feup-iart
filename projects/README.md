@@ -12,9 +12,9 @@
 ### Project 2
 
  - [X] **1 Mai** Project 2 Topic Choice
- - [ ] **10 Mai** Project 2 Checkpoint
- - [ ] **19 Mai** Project 2 Delivery
- - [ ] **29 Mai** Project 2 Presentation
+ - [X] **10 Mai** Project 2 Checkpoint
+ - [X] **28 Mai** Project 2 Delivery
+ - [X] **1 Jun** Project 2 Presentation
 
 ### Tests
 
